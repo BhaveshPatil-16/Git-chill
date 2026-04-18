@@ -1,367 +1,369 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import ReactPlayer from "react-player";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { getArticlesAPI, updateArticleAPI } from "../action";
-import PostalModal from "./PostalModal";
 
 const Container = styled.div`
 	grid-area: main;
-`;
-
-const CommonBox = styled.div`
-	text-align: center;
-	overflow: hidden;
-	margin-bottom: 8px;
-	background-color: #fff;
-	border-radius: 5px;
-	position: relative;
-	border: none;
-	box-shadow: 0 0 0 1px rgb(0 0 0 / 15%), 0 0 0 rgb(0 0 0 / 20%);
-`;
-
-const ShareBox = styled(CommonBox)`
 	display: flex;
 	flex-direction: column;
-	margin: 0 0 8px;
-	color: #958b7b;
-	div {
-		button {
-			outline: none;
-			color: rgba(0, 0, 0, 0.6);
-			font-size: 14px;
-			line-height: 1.5;
-			min-height: 48px;
-			display: flex;
-			align-items: center;
-			border: none;
-			background-color: transparent;
-			font-weight: 600;
-		}
-		&:first-child {
-			display: flex;
-			align-items: center;
-			padding: 8px 16px;
-			img {
-				width: 48px;
-				border-radius: 50%;
-				margin-right: 8px;
-			}
-			button {
-				margin: 4px 0;
-				flex-grow: 1;
-				padding-left: 16px;
-				border: 1px solid rgba(0, 0, 0, 0.15);
-				border-radius: 35px;
-				text-align: left;
-			}
-		}
-		&:nth-child(2) {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-around;
-			padding-bottom: 4px;
-			button {
-				img {
-					margin: 0 4px 0 -2px;
-				}
-			}
-		}
+	gap: 20px;
+`;
+
+const TabsContainer = styled.div`
+	display: flex;
+	background: var(--bg-card);
+	border-radius: 12px;
+	padding: 8px;
+	box-shadow: var(--card-shadow);
+	border: 1px solid var(--border-color);
+	gap: 8px;
+	
+	@media (max-width: 768px) {
+		flex-direction: column;
 	}
 `;
 
-const Article = styled(CommonBox)`
-	padding: 0;
-	margin: 0 0 8px;
-	overflow: visible;
-`;
-
-const SharedActor = styled.div`
-	padding-right: 40px;
-	flex-wrap: nowrap;
-	padding: 12px 16px 0;
-	margin-bottom: 8px;
+const TabButton = styled.button`
+	flex: 1;
+	background: ${props => props.active ? "var(--bg-primary)" : "transparent"};
+	color: ${props => props.active ? "var(--text-card-primary)" : "var(--text-card-secondary)"};
+	border: none;
+	padding: 12px 16px;
+	border-radius: 8px;
+	font-weight: 600;
+	font-size: 14px;
+	cursor: pointer;
+	transition: all 0.2s;
 	display: flex;
 	align-items: center;
-	a {
-		margin-right: 12px;
-		flex-grow: 1;
-		overflow: hidden;
+	justify-content: center;
+	gap: 8px;
+	box-shadow: ${props => props.active ? "inset 0 0 0 1px var(--border-color)" : "none"};
+	
+	&:hover {
+		background: ${props => props.active ? "var(--bg-primary)" : "rgba(0,0,0,0.02)"};
+		color: var(--text-card-primary);
+	}
+`;
+
+const Card = styled.div`
+	background: var(--bg-card);
+	border-radius: 16px;
+	padding: 24px;
+	box-shadow: var(--card-shadow);
+	border: 1px solid var(--border-color);
+`;
+
+const SponsoredBanner = styled.div`
+	background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
+	border-left: 4px solid var(--accent-purple);
+	border-radius: 8px;
+	padding: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 24px;
+	
+	div {
 		display: flex;
-		img {
-			width: 48px;
-			height: 48px;
-			border-radius: 50%;
+		flex-direction: column;
+		gap: 4px;
+		
+		span {
+			font-size: 11px;
+			font-weight: 700;
+			color: var(--accent-purple);
+			text-transform: uppercase;
 		}
-		& > div {
-			display: flex;
-			flex-direction: column;
-			flex-grow: 1;
-			flex-basis: 0;
-			margin-left: 8px;
-			overflow: hidden;
-			span {
-				text-align: left;
-				&:first-child {
-					font-size: 14px;
-					font-weight: 700;
-					color: #000;
-				}
-				&:nth-child(n + 2) {
-					font-size: 12px;
-					color: rgba(0, 0, 0, 0.6);
-				}
-			}
+		
+		p {
+			font-size: 14px;
+			color: var(--text-card-primary);
+			font-weight: 600;
 		}
 	}
+	
 	button {
-		position: absolute;
-		top: 0;
-		right: 12px;
+		background: var(--gradient-accent);
+		color: #ffffff;
 		border: none;
-		outline: none;
-		background: transparent;
+		padding: 10px 20px;
+		border-radius: 20px;
+		font-weight: 700;
+		font-size: 13px;
+		cursor: pointer;
+		box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+		transition: all 0.2s;
+		
+		&:hover {
+			transform: scale(1.05);
+			box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+		}
 	}
 `;
 
-const Description = styled.div`
-	padding: 0 16px;
-	overflow: hidden;
-	font-size: 14px;
-	text-align: left;
-`;
-
-const SharedImage = styled.div`
-	margin: 8px 16px 0;
-	background-color: #f9fafb;
-	img {
-		width: 100%;
-		height: 100%;
-	}
-`;
-
-const SocialCount = styled.ul`
-	line-height: 1.3;
+/* Job Card Styling */
+const JobHeader = styled.div`
 	display: flex;
 	align-items: flex-start;
-	overflow: auto;
-	margin: 0 16px;
-	padding: 8px 0;
-	border-bottom: 1px solid #e9efdf;
-	color: rgba(0, 0, 0, 0.6);
-	list-style: none;
-	li {
-		margin-right: 5px;
-		font-size: 12px;
-		button {
-			display: flex;
-			border: none;
-			color: rgba(0, 0, 0, 0.6);
-			background: transparent;
-			span {
-				padding-left: 5px;
-			}
-		}
-	}
+	justify-content: space-between;
+	margin-bottom: 16px;
 `;
 
-const SocialActions = styled.div`
+const CompanyInfo = styled.div`
 	display: flex;
 	align-items: center;
-	justify-content: flex-start;
-	margin: 4px 12px;
-	min-height: 40px;
-	padding-bottom: 5px;
-	button {
-		display: inline-flex;
-		align-items: center;
-		padding: 8px;
-		border: none;
-		background: transparent;
-		span {
-			margin-left: 4px;
-			color: rgba(0, 0, 0, 0.6);
-			font-size: 14px;
-		}
+	gap: 16px;
+	
+	img {
+		width: 56px;
+		height: 56px;
+		border-radius: 8px;
+		object-fit: contain;
+		background: #fff;
+		border: 1px solid var(--border-card);
+		padding: 4px;
 	}
-	button.active {
-		span {
-			color: #0a66c2;
-			font-weight: 600;
+	
+	div {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		
+		.company-name {
+			font-size: 16px;
+			font-weight: 700;
+			color: var(--text-card-primary);
+			display: flex;
+			align-items: center;
+			gap: 6px;
 		}
-		svg {
-			fill: #0a66c2;
+		
+		.verified-badge {
+			background: #e0e7ff;
+			color: #4f46e5;
+			font-size: 10px;
+			padding: 2px 6px;
+			border-radius: 12px;
+			font-weight: 700;
+			text-transform: uppercase;
 		}
 	}
 `;
 
-const Content = styled.div`
-	text-align: center;
-	& > img {
-		width: 30px;
-	}
+const ExperienceBadge = styled.span`
+	background: ${props => props.isFresher ? "#dcfce7" : "#fef3c7"};
+	color: ${props => props.isFresher ? "#166534" : "#92400e"};
+	font-size: 12px;
+	font-weight: 700;
+	padding: 4px 12px;
+	border-radius: 16px;
 `;
 
-function Main(props) {
-	const [showModal, setShowModal] = useState("close");
+const JobTitle = styled.h3`
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--text-card-primary);
+	margin-bottom: 12px;
+`;
 
-	const { getArticles } = props;
-	useEffect(() => {
-		getArticles();
-	}, [getArticles]);
+const JobMetaRow = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-bottom: 16px;
+	font-size: 14px;
+	color: var(--text-card-secondary);
+	font-weight: 500;
+`;
 
-	const clickHandler = (event) => {
-		event.preventDefault();
-		if (event.target !== event.currentTarget) {
-			return;
+const SkillsTags = styled.div`
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 16px;
+`;
+
+const SkillChip = styled.span`
+	background: var(--bg-primary);
+	color: var(--text-card-secondary);
+	padding: 4px 12px;
+	border-radius: 16px;
+	font-size: 12px;
+	font-weight: 600;
+	border: 1px solid var(--border-color);
+`;
+
+const ActionRow = styled.div`
+	display: flex;
+	gap: 12px;
+	margin-top: 24px;
+`;
+
+const ApplyButton = styled.button`
+	background: var(--accent-blue);
+	color: white;
+	border: none;
+	padding: 10px 24px;
+	border-radius: 8px;
+	font-weight: 600;
+	font-size: 14px;
+	cursor: pointer;
+	flex-grow: 1;
+`;
+
+const OppTypeBadge = styled.span`
+	background: #f3e8ff;
+	color: #7e22ce;
+	padding: 4px 12px;
+	border-radius: 4px;
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: uppercase;
+	margin-bottom: 12px;
+	display: inline-block;
+`;
+
+function JobsFeed() {
+	const jobs = [
+		{
+			company: "Stripe",
+			logo: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg",
+			title: "Senior Payment Platform Engineer",
+			location: "Remote (US)",
+			salary: "$180k - $240k",
+			type: "Full-time",
+			exp: "Experienced (5+ Yrs)",
+			isFresher: false,
+			skills: ["Go", "React", "Distributed Systems"]
+		},
+		{
+			company: "Netflix",
+			logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+			title: "Frontend Developer (UI Foundations)",
+			location: "Los Gatos, CA",
+			salary: "$120k - $160k",
+			type: "Full-time",
+			exp: "Fresher Friendly",
+			isFresher: true,
+			skills: ["React", "JavaScript", "CSS Architecture"]
 		}
-		switch (showModal) {
-			case "open":
-				setShowModal("close");
-				break;
-			case "close":
-				setShowModal("open");
-				break;
-			default:
-				setShowModal("close");
-				break;
+	];
+
+	return (
+		<>
+			<SponsoredBanner>
+				<div>
+					<span>Sponsored</span>
+					<p>Scale your startup with AWS Activate. Get up to $100k in credits.</p>
+				</div>
+				<button>Apply Now</button>
+			</SponsoredBanner>
+			{jobs.map((job, idx) => (
+				<Card key={idx} style={{ marginBottom: '24px' }}>
+					<JobHeader>
+						<CompanyInfo>
+							<img src={job.logo} alt={job.company} />
+							<div>
+								<div className="company-name">{job.company} <span className="verified-badge">✓ Verified</span></div>
+								<span style={{ fontSize: '13px', color: 'var(--text-card-muted)' }}>Posted 2 hours ago</span>
+							</div>
+						</CompanyInfo>
+						<ExperienceBadge isFresher={job.isFresher}>{job.exp}</ExperienceBadge>
+					</JobHeader>
+					<JobTitle>{job.title}</JobTitle>
+					<JobMetaRow>
+						<span>📍 {job.location}</span>
+						<span>💼 {job.type}</span>
+						<span>💰 <strong style={{ color: '#059669' }}>{job.salary}</strong></span>
+					</JobMetaRow>
+					<SkillsTags>
+						{job.skills.map((s, i) => <SkillChip key={i}>{s}</SkillChip>)}
+					</SkillsTags>
+					<ActionRow>
+						<ApplyButton>Easy Apply</ApplyButton>
+						<button style={{ background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-card-secondary)', borderRadius: '8px', padding: '0 20px', fontWeight: 'bold' }}>Save</button>
+					</ActionRow>
+				</Card>
+			))}
+		</>
+	);
+}
+
+function MarketplaceFeed() {
+	const opps = [
+		{
+			type: "Seeking Investment",
+			title: "Seed Round - AI Healthcare Startup",
+			author: "Dr. Sarah Chen, CEO at MedAI",
+			desc: "We are raising $1.5M to scale our generative AI diagnostic tool. Currently at $20k MRR with 5 hospital pilot programs. Looking for strategic healthcare investors."
+		},
+		{
+			type: "Partnership",
+			title: "B2B SaaS seeking Marketing Agency",
+			author: "Growth at Acme Corp",
+			desc: "Expanding to European markets. We need a performance marketing agency with a proven track record in enterprise SaaS software. Budget: $20k/mo."
 		}
-	};
+	];
+	
+	return (
+		<>
+			{opps.map((opp, idx) => (
+				<Card key={idx} style={{ marginBottom: '24px' }}>
+					<OppTypeBadge>{opp.type}</OppTypeBadge>
+					<JobTitle>{opp.title}</JobTitle>
+					<div style={{ fontSize: '14px', color: 'var(--text-card-secondary)', marginBottom: '16px', fontWeight: '500' }}>{opp.author}</div>
+					<p style={{ fontSize: '15px', color: 'var(--text-card-primary)', lineHeight: '1.6', marginBottom: '24px' }}>{opp.desc}</p>
+					<ApplyButton style={{ width: 'auto' }}>Contact Privately</ApplyButton>
+				</Card>
+			))}
+		</>
+	);
+}
 
-	function likeHandler(event, postIndex, id) {
-		event.preventDefault();
-		let currentLikes = props.articles[postIndex].likes.count;
-		let whoLiked = props.articles[postIndex].likes.whoLiked;
-		let user = props.user.email;
-		let userIndex = whoLiked.indexOf(user);
+function NetworkingFeed() {
+	return (
+		<Card>
+			<div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+				<img src="/images/user.svg" alt="" style={{ width: '48px', height: '48px', borderRadius: '50%' }} />
+				<div>
+					<div style={{ fontWeight: '700', color: 'var(--text-card-primary)' }}>Alex Rivera</div>
+					<div style={{ fontSize: '12px', color: 'var(--text-card-secondary)' }}>Principal Engineer @ Vercel</div>
+				</div>
+			</div>
+			<p style={{ fontSize: '14px', color: 'var(--text-card-primary)', lineHeight: '1.6' }}>
+				Just published a deep dive on React Server Components and how they fundamentally shift our mental model for rendering. We moved 80% of our client-side logic to the server resulting in a 40% performance gain on mobile. Link in the comments! 🚀
+			</p>
+			<div style={{ marginTop: '16px', display: 'flex', gap: '8px' }}>
+				<SkillChip>#React</SkillChip>
+				<SkillChip>#WebDev</SkillChip>
+			</div>
+		</Card>
+	);
+}
 
-		if (userIndex >= 0) {
-			currentLikes--;
-			whoLiked.splice(userIndex, 1);
-		} else if (userIndex === -1) {
-			currentLikes++;
-			whoLiked.push(user);
-		}
-
-		const payload = {
-			update: {
-				likes: {
-					count: currentLikes,
-					whoLiked: whoLiked,
-				},
-			},
-			id: id,
-		};
-
-		props.likeHandler(payload);
-	}
+function Main() {
+	const [activeTab, setActiveTab] = useState("jobs");
 
 	return (
 		<Container>
-			<ShareBox>
-				<div>
-					{props.user.photoURL ? <img src={props.user.photoURL} alt="" /> : <img src="/images/user.svg" alt="" />}
-					<button onClick={clickHandler} disabled={props.loading ? true : false}>
-						Start a post
-					</button>
-				</div>
-				<div>
-					<button>
-						<img src="/images/photo-icon.svg" alt="" />
-						<span>Photo</span>
-					</button>
-					<button>
-						<img src="/images/video-icon.svg" alt="" />
-						<span>Video</span>
-					</button>
-					<button>
-						<img src="/images/event-icon.svg" alt="" />
-						<span>Event</span>
-					</button>
-					<button>
-						<img src="/images/article-icon.svg" alt="" />
-						<span>Write article</span>
-					</button>
-				</div>
-			</ShareBox>
-			<Content>
-				{props.loading && <img src="/images/spin-loader.gif" alt="" />}
-				{props.articles.length > 0 &&
-					props.articles.map((article, key) => (
-						<Article key={key}>
-							<SharedActor>
-								<a href="#!">
-									{article.actor.image ? <img src={article.actor.image} alt="" /> : <img src="/images/user.svg" alt="" />}
-									<div>
-										<span>{article.actor.title}</span>
-										<span>{article.actor.description}</span>
-										<span>{article.actor.date.toDate().toLocaleDateString()}</span>
-									</div>
-								</a>
-								<button>
-									<img src="/images/ellipses.svg" alt="" />
-								</button>
-							</SharedActor>
-							<Description>{article.description}</Description>
-							<SharedImage>
-								<a href="#!">{!article.sharedImg && article.video ? <ReactPlayer width={"100%"} url={article.video} /> : article.sharedImg && <img src={article.sharedImg} alt="" />}</a>
-							</SharedImage>
-							<SocialCount>
-								{props.articles[key].likes.count > 0 && (
-									<>
-										<li>
-											<button>
-												<img src="https://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb" alt="" />
-												{/* <img src="https://static-exp1.licdn.com/sc/h/7fx9nkd7mx8avdpqm5hqcbi97" alt="" /> */}
-												<span>{props.articles[key].likes.count}</span>
-											</button>
-										</li>
-										<li>
-											<a href="#!">{article.comments} comments (currently not working)</a>
-										</li>
-									</>
-								)}
-							</SocialCount>
-							<SocialActions>
-								<button onClick={(event) => likeHandler(event, key, props.ids[key])} className={props.articles[key].likes.whoLiked.indexOf(props.user.email) >= 0 ? "active" : null}>
-									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-supported-dps="24x24" fill="rgba(0, 0, 0, 0.6)" width="24" height="24" focusable="false">
-										<path d="M19.46 11l-3.91-3.91a7 7 0 01-1.69-2.74l-.49-1.47A2.76 2.76 0 0010.76 1 2.75 2.75 0 008 3.74v1.12a9.19 9.19 0 00.46 2.85L8.89 9H4.12A2.12 2.12 0 002 11.12a2.16 2.16 0 00.92 1.76A2.11 2.11 0 002 14.62a2.14 2.14 0 001.28 2 2 2 0 00-.28 1 2.12 2.12 0 002 2.12v.14A2.12 2.12 0 007.12 22h7.49a8.08 8.08 0 003.58-.84l.31-.16H21V11zM19 19h-1l-.73.37a6.14 6.14 0 01-2.69.63H7.72a1 1 0 01-1-.72l-.25-.87-.85-.41A1 1 0 015 17l.17-1-.76-.74A1 1 0 014.27 14l.66-1.09-.73-1.1a.49.49 0 01.08-.7.48.48 0 01.34-.11h7.05l-1.31-3.92A7 7 0 0110 4.86V3.75a.77.77 0 01.75-.75.75.75 0 01.71.51L12 5a9 9 0 002.13 3.5l4.5 4.5H19z"></path>
-									</svg>
-									<span>Like</span>
-								</button>
-								<button>
-									<img src="/images/comment-icon.svg" alt="" />
-									<span>Comment</span>
-								</button>
-								<button>
-									<img src="/images/share-icon.svg" alt="" />
-									<span>Share</span>
-								</button>
-								<button>
-									<img src="/images/send-icon.svg" alt="" />
-									<span>Send</span>
-								</button>
-							</SocialActions>
-						</Article>
-					))}
-			</Content>
-			<PostalModal showModal={showModal} clickHandler={clickHandler} />
+			<TabsContainer>
+				<TabButton active={activeTab === "jobs"} onClick={() => setActiveTab("jobs")}>
+					💼 Jobs Board
+				</TabButton>
+				<TabButton active={activeTab === "market"} onClick={() => setActiveTab("market")}>
+					🤝 Opportunity Market
+				</TabButton>
+				<TabButton active={activeTab === "network"} onClick={() => setActiveTab("network")}>
+					🌐 Networking
+				</TabButton>
+			</TabsContainer>
+
+			{activeTab === "jobs" && <JobsFeed />}
+			{activeTab === "market" && <MarketplaceFeed />}
+			{activeTab === "network" && <NetworkingFeed />}
+
 		</Container>
 	);
 }
 
-const mapStateToProps = (state) => {
-	return {
-		user: state.userState.user,
-		loading: state.articleState.loading,
-		articles: state.articleState.articles,
-		ids: state.articleState.ids,
-	};
-};
-
-const mapDispatchToProps = (dispatch) => ({
-	getArticles: () => dispatch(getArticlesAPI()),
-	likeHandler: (payload) => dispatch(updateArticleAPI(payload)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default Main;

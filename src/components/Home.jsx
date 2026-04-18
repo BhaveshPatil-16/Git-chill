@@ -4,60 +4,32 @@ import { Redirect } from "react-router";
 import styled from "styled-components";
 import Left from "./Left";
 import Main from "./Main";
-import Right from "./Right";
 
 const Container = styled.div`
 	max-width: 100%;
+	min-height: 100vh;
+	background: var(--bg-primary);
 `;
 
 const Content = styled.div`
-	max-width: 1128px;
-	margin: auto;
-`;
-
-const Section = styled.section`
-	min-height: 50px;
-	margin: 16px 0 -30px;
-	box-sizing: content-box;
-	text-align: center;
-	text-decoration: underline;
+	margin-left: var(--sidebar-width); /* Push past fixed sidebar */
+	padding: 32px 24px;
 	display: flex;
 	justify-content: center;
-	h5 {
-		color: #0a66c2;
-		font-size: 14px;
-		margin-block-start: 0;
-		margin-block-end: 0;
-		a {
-			font-weight: 700;
-		}
-	}
-	p {
-		font-size: 14px;
-		color: #434649;
-		margin-block-start: 0;
-		margin-block-end: 0;
-		font-weight: 600;
-	}
-
+	transition: margin-left 0.3s ease;
+	
 	@media (max-width: 768px) {
-		flex-direction: column;
-		padding: 0 5px;
-		margin: 16px 0;
+		margin-left: 0;
+		padding: 24px 16px;
 	}
 `;
 
 const Layout = styled.div`
-	display: grid;
-	grid-template-areas: "left main right";
-	grid-template-columns: minmax(0, 5fr) minmax(0, 12fr) minmax(300px, 7fr);
-	column-gap: 25px;
-	row-gap: 25px;
-	margin: 25px 0;
+	width: 100%;
+	max-width: 900px; /* Perfect width for centered feed */
+	
 	@media (max-width: 768px) {
-		display: flex;
-		flex-direction: column;
-		padding: 0 5px;
+		max-width: 100%;
 	}
 `;
 
@@ -66,16 +38,9 @@ function Home(props) {
 		<Container>
 			{!props.user && <Redirect to="/" />}
 			<Content>
-				<Section>
-					<h5>
-						<a href="#!">Hiring in a hurray..?</a>
-					</h5>
-					<p>- Find talented pros in record time with LinkedIn and keep business moving.</p>
-				</Section>
 				<Layout>
 					<Left />
 					<Main />
-					<Right />
 				</Layout>
 			</Content>
 		</Container>
@@ -89,3 +54,4 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(Home);
+

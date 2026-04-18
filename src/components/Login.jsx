@@ -4,55 +4,77 @@ import { Redirect } from "react-router";
 import styled from "styled-components";
 import { signInAPI } from "../action";
 
-const Container = styled.div``;
+const Container = styled.div`
+	padding-top: 10px;
+`;
 
 const Nav = styled.nav`
 	max-width: 1128px;
 	margin: auto;
-	padding: 12px 0 16px;
+	padding: 12px 24px 16px;
 	display: flex;
 	flex-wrap: nowrap;
 	align-items: center;
 	justify-content: space-between;
 	position: relative;
+`;
 
-	& > a {
-		width: 130px;
-		height: 35px;
-		@media (max-width: 768px) {
-			padding: 0 5px;
-		}
-	}
+const LogoWrap = styled.a`
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+`;
+
+const LogoText = styled.span`
+	font-size: 32px;
+	font-weight: 700;
+	color: var(--text-primary);
+	letter-spacing: -1px;
+`;
+
+const LogoX = styled.span`
+	font-size: 38px;
+	font-weight: 800;
+	background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	margin-left: -2px;
 `;
 
 const Join = styled.a`
 	font-size: 16px;
-	padding: 10px;
+	padding: 12px 24px;
 	text-decoration: none;
-	border-radius: 5px;
-	color: rgba(0, 0, 0, 0.6);
-	margin-right: 8px;
+	border-radius: 8px;
+	color: var(--text-secondary);
+	margin-right: 12px;
+	font-weight: 600;
+	transition: background-color 0.2s ease, color 0.2s ease;
+	cursor: pointer;
 
 	&:hover {
-		background-color: rgba(0, 0, 0, 0.08);
-		color: rgba(0, 0, 0, 1);
+		background-color: var(--input-bg);
+		color: var(--text-primary);
 	}
 `;
 
 const SignIn = styled.a`
-	box-shadow: inset 0 0 0 1px #0a66c2;
-	border-radius: 25px;
-	color: #0a66c2;
+	border-radius: 24px;
+	color: #fff;
 	font-size: 16px;
 	font-weight: 600;
-	transition-duration: 167ms;
+	transition: all 0.2s ease;
 	line-height: 40px;
-	padding: 10px 25px;
+	padding: 12px 32px;
 	text-align: center;
-	background-color: transparent;
+	background: linear-gradient(135deg, #a855f7, #3b82f6);
+	box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+	cursor: pointer;
+	
 	&:hover {
-		background-color: rgba(112, 181, 249, 0.15);
-		box-shadow: inset 0 0 0 2px #0a66c2;
+		background: linear-gradient(135deg, #9333ea, #2563eb);
+		box-shadow: 0 6px 16px rgba(168, 85, 247, 0.5);
+		transform: translateY(-2px);
 	}
 `;
 
@@ -61,9 +83,8 @@ const Section = styled.section`
 	flex-wrap: wrap;
 	align-content: start;
 	min-height: 700px;
+	padding-top: 80px;
 	padding-bottom: 138px;
-	padding-top: 40px;
-	padding: 60px 0;
 	position: relative;
 	width: 100%;
 	max-width: 1128px;
@@ -71,45 +92,79 @@ const Section = styled.section`
 	margin: auto;
 	@media (max-width: 768px) {
 		min-height: 0;
+		padding-top: 40px;
+		flex-direction: column;
 	}
 `;
 
 const Hero = styled.div`
 	width: 100%;
-	h1 {
-		padding-bottom: 0;
-		width: 55%;
-		font-size: 56px;
-		color: #2977c9;
-		font-weight: 200;
-		line-height: 70px;
-		@media (max-width: 768px) {
-			text-align: center;
-			width: 100%;
-			font-size: 20px;
-			line-height: 2;
-		}
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 24px;
+	@media (max-width: 768px) {
+		flex-direction: column;
+		text-align: center;
 	}
+`;
+
+const HeroText = styled.div`
+	width: 50%;
+	@media (max-width: 768px) {
+		width: 100%;
+		margin-bottom: 40px;
+	}
+`;
+
+const Title = styled.h1`
+	font-size: 56px;
+	color: var(--text-primary);
+	font-weight: 800;
+	line-height: 1.2;
+	margin-bottom: 16px;
+	span {
+		font-weight: 800;
+		background: var(--gradient-accent);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+	@media (max-width: 768px) {
+		font-size: 36px;
+	}
+`;
+
+const Subtitle = styled.p`
+	font-size: 18px;
+	line-height: 1.5;
+	color: var(--text-secondary);
+	margin-bottom: 40px;
+	max-width: 440px;
+	font-weight: 500;
+	@media (max-width: 768px) {
+		margin: 0 auto 40px;
+	}
+`;
+
+const HeroImage = styled.div`
+	width: 45%;
+	display: flex;
+	justify-content: center;
 	img {
-		width: 700px;
-		height: 670px;
-		position: absolute;
-		bottom: -2px;
-		right: -150px;
-		@media (max-width: 768px) {
-			top: 230px;
-			position: initial;
-			width: initial;
-			height: initial;
-		}
+		width: 100%;
+		max-width: 500px;
+		filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+	}
+	@media (max-width: 768px) {
+		width: 100%;
 	}
 `;
 
 const Form = styled.div`
-	margin-top: 100px;
-	width: 408px;
+	width: 100%;
+	max-width: 400px;
 	@media (max-width: 768px) {
-		margin: 20px auto 0;
+		margin: 0 auto;
 	}
 `;
 
@@ -117,21 +172,24 @@ const Google = styled.button`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: #fff;
-	height: 56px;
+	background-color: var(--bg-card);
+	height: 64px;
 	width: 100%;
-	border-radius: 30px;
-	box-shadow: inset 0 0 0 1px rgb(0 0 0 / 60%), inset 0 0 0 2px rgb(0 0 0 / 0%), inset 0 0 0 1px rgb(0 0 0 / 0);
-	border: none;
+	border-radius: 32px;
+	border: 1px solid var(--border-color);
 	vertical-align: middle;
-	transition-duration: 167ms;
+	transition: all 0.3s ease;
 	font-size: 20px;
-	color: rgba(0, 0, 0, 0.6);
-	z-index: 0;
+	color: var(--text-primary);
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: var(--card-shadow);
+	
 	&:hover {
-		background-color: rgba(207, 207, 207, 0.25);
-		color: rgba(0, 0, 0, 0.75);
-		box-shadow: inset 0 0 0 2px rgb(0 0 0 / 60%), inset 0 0 0 3px rgb(0 0 0 / 0%), inset 0 0 0 2px rgb(0 0 0 / 0);
+		background-color: var(--bg-nav);
+		border-color: var(--accent-purple);
+		transform: translateY(-2px);
+		box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 	}
 	img {
 		margin-right: 25px;
@@ -143,25 +201,39 @@ function Login(props) {
 		<Container>
 			{props.user && <Redirect to="/feed" />}
 			<Nav>
-				<a href="/">
-					<img src="/images/login-logo.svg" alt="" />
-				</a>
+				<LogoWrap href="/">
+					<LogoText>hire</LogoText>
+					<LogoX>X</LogoX>
+				</LogoWrap>
 				<div>
-					<Join>Join Now</Join>
-					<SignIn>Sign In</SignIn>
+					<Join>Join now</Join>
+					<SignIn onClick={() => props.signIn()}>Sign in</SignIn>
 				</div>
 			</Nav>
 			<Section>
 				<Hero>
-					<h1>Welcome to your professional community</h1>
-					<img src="/images/login-hero.svg" alt="" />
+					<HeroText>
+						<Title>Find your next<br/><span>great opportunity</span></Title>
+						<Subtitle>Join hireX to connect, share, and discover the world's most innovative professionals. A dedicated ecosystem for quality hiring and role matching.</Subtitle>
+						
+						<div style={{ background: 'var(--bg-card)', padding: '16px', borderRadius: '8px', marginBottom: '24px', borderLeft: '4px solid var(--accent-purple)', boxShadow: 'var(--card-shadow)' }}>
+							<h4 style={{ color: 'var(--text-primary)', fontSize: '14px', marginBottom: '4px' }}>⚠️ Experienced Professionals Only</h4>
+							<p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', fontWeight: '500' }}>
+								Only verified businesses and working professionals (3+ Yrs) are allowed to sign up. Freshers are currently out of scope for this platform version.
+							</p>
+						</div>
+
+						<Form>
+							<Google onClick={() => props.signIn()}>
+								<img src="/images/google.svg" alt="Google" />
+								Sign in with Google
+							</Google>
+						</Form>
+					</HeroText>
+					<HeroImage>
+						<img src="/images/login-hero.svg" alt="Professionals connecting" />
+					</HeroImage>
 				</Hero>
-				<Form>
-					<Google onClick={() => props.signIn()}>
-						<img src="/images/google.svg" alt="" />
-						Sign in with Google
-					</Google>
-				</Form>
 			</Section>
 		</Container>
 	);
