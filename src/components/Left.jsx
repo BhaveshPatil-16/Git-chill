@@ -9,16 +9,17 @@ const Container = styled.div`
 	width: var(--sidebar-width);
 	height: calc(100vh - 64px);
 	background-color: var(--bg-nav);
-	backdrop-filter: blur(10px);
+	backdrop-filter: blur(16px) saturate(1.3);
+	-webkit-backdrop-filter: blur(16px) saturate(1.3);
 	border-right: 1px solid var(--border-color);
 	display: flex;
 	flex-direction: column;
-	padding: 24px 16px;
-	gap: 24px;
+	padding: 20px 14px;
+	gap: 20px;
 	overflow-y: auto;
 	overflow-x: hidden;
 	z-index: 50;
-	transition: all 0.3s ease;
+	transition: all var(--transition-normal);
 	
 	/* Hide scrollbar */
 	&::-webkit-scrollbar {
@@ -54,7 +55,7 @@ const Container = styled.div`
 const SidebarControls = styled.div`
 	display: flex;
 	justify-content: flex-end;
-	margin-bottom: -12px;
+	margin-bottom: -8px;
 	
 	body.sidebar-closed & {
 		display: none;
@@ -66,20 +67,20 @@ const CloseButton = styled.button`
 	border: none;
 	cursor: pointer;
 	color: var(--text-secondary);
-	padding: 4px;
-	border-radius: 8px;
+	padding: 6px;
+	border-radius: var(--radius-sm);
 	display: flex;
 	align-items: center;
-	transition: background 0.2s, color 0.2s;
+	transition: all var(--transition-fast);
 	
 	&:hover {
-		background: var(--bg-card);
+		background: rgba(255, 255, 255, 0.06);
 		color: var(--text-primary);
 	}
 	
 	svg {
-		width: 20px;
-		height: 20px;
+		width: 18px;
+		height: 18px;
 		stroke-width: 2.5;
 	}
 `;
@@ -88,29 +89,29 @@ const UserInfo = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding-bottom: 20px;
+	padding: 4px 0 20px;
 	border-bottom: 1px solid var(--border-color);
-	transition: transform 0.2s;
+	transition: transform var(--transition-fast);
 	
 	&:hover {
-		transform: scale(1.02);
+		transform: scale(1.01);
 	}
 `;
 
 const Avatar = styled.div`
-	width: 80px;
-	height: 80px;
+	width: 72px;
+	height: 72px;
 	border-radius: 50%;
 	background: var(--gradient-accent);
 	margin-bottom: 12px;
-	border: 4px solid var(--bg-primary);
+	border: 3px solid rgba(155, 79, 223, 0.2);
 	overflow: hidden;
-	box-shadow: var(--card-shadow);
-	transition: width 0.3s ease, height 0.3s ease;
+	box-shadow: 0 2px 12px rgba(155, 79, 223, 0.15);
+	transition: width var(--transition-normal), height var(--transition-normal);
 	
 	body.sidebar-closed & {
-		width: 48px;
-		height: 48px;
+		width: 44px;
+		height: 44px;
 	}
 
 	img {
@@ -121,53 +122,57 @@ const Avatar = styled.div`
 `;
 
 const Name = styled.h2`
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 700;
 	color: var(--text-primary);
 	margin-bottom: 4px;
 	white-space: nowrap;
+	letter-spacing: -0.02em;
 `;
 
 const Title = styled.p`
-	font-size: 13px;
+	font-size: 12px;
 	color: var(--text-secondary);
 	text-align: center;
 	white-space: nowrap;
+	letter-spacing: -0.01em;
 `;
 
 const NavMenu = styled.nav`
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: 4px;
 `;
 
 const NavLink = styled.a`
 	display: flex;
 	align-items: center;
-	padding: 12px 16px;
-	border-radius: 12px;
+	padding: 10px 14px;
+	border-radius: var(--radius-md);
 	color: var(--text-secondary);
 	text-decoration: none;
-	font-size: 14px;
-	font-weight: 600;
-	transition: all 0.2s ease-in-out;
+	font-size: 13.5px;
+	font-weight: 500;
+	transition: all var(--transition-fast);
+	letter-spacing: -0.01em;
 	
 	&:hover, &.active {
-		background: rgba(168, 85, 247, 0.15);
+		background: rgba(155, 79, 223, 0.1);
 		color: var(--accent-purple);
-		transform: translateX(4px);
+		transform: translateX(2px);
 	}
 	svg {
-		margin-right: 14px;
-		width: 20px;
-		height: 20px;
+		margin-right: 12px;
+		width: 18px;
+		height: 18px;
 		flex-shrink: 0;
-		transition: transform 0.2s;
+		transition: transform var(--transition-fast);
 		color: var(--text-secondary);
+		stroke-width: 2;
 	}
 	
 	&:hover svg, &.active svg {
-		transform: scale(1.1);
+		transform: scale(1.08);
 		color: var(--accent-purple);
 	}
 
@@ -177,27 +182,28 @@ const NavLink = styled.a`
 	
 	body.sidebar-closed & {
 		justify-content: center;
-		padding: 12px 0;
+		padding: 10px 0;
 		
 		svg {
 			margin-right: 0;
-			width: 24px;
-			height: 24px;
+			width: 22px;
+			height: 22px;
 		}
 	}
 `;
 
 const AITipWidget = styled.div`
-	background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
-	border-left: 4px solid var(--accent-blue);
-	border-radius: 12px;
+	background: linear-gradient(135deg, rgba(54, 116, 224, 0.08), rgba(155, 79, 223, 0.08));
+	border: 1px solid rgba(155, 79, 223, 0.12);
+	border-radius: var(--radius-md);
 	padding: 16px;
 	margin-top: auto; /* pushes it down */
-	transition: transform 0.2s, box-shadow 0.2s;
+	transition: all var(--transition-normal);
 	
 	&:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+		box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+		border-color: rgba(155, 79, 223, 0.2);
 	}
 `;
 
@@ -205,66 +211,75 @@ const WidgetHeader = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: 700;
 	color: var(--accent-blue);
 	margin-bottom: 8px;
 	text-transform: uppercase;
+	letter-spacing: 0.04em;
 `;
 
 const TipText = styled.p`
-	font-size: 13px;
+	font-size: 12.5px;
 	color: var(--text-primary);
-	line-height: 1.5;
-	font-weight: 500;
+	line-height: 1.55;
+	font-weight: 400;
+	letter-spacing: -0.01em;
 `;
 
 const TipAction = styled.button`
-	background: var(--accent-blue);
+	background: var(--gradient-accent);
 	color: white;
 	border: none;
 	padding: 8px 12px;
-	border-radius: 8px;
+	border-radius: var(--radius-sm);
 	font-size: 12px;
 	font-weight: 600;
 	margin-top: 12px;
 	cursor: pointer;
-	box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-	transition: all 0.2s;
+	box-shadow: 0 2px 8px rgba(155, 79, 223, 0.2);
+	transition: all var(--transition-fast);
 	width: 100%;
+	letter-spacing: -0.01em;
 	
 	&:hover {
-		background: #2563eb;
-		transform: scale(1.02);
+		box-shadow: 0 4px 16px rgba(155, 79, 223, 0.35);
+		transform: translateY(-1px);
+	}
+	
+	&:active {
+		transform: translateY(0) scale(0.98);
 	}
 `;
 
 const RewardWidget = styled.div`
-	background: linear-gradient(135deg, #0f172a, #1e1b4b);
-	border-radius: 12px;
+	background: linear-gradient(145deg, #0e1425, #1a1540);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: var(--radius-md);
 	padding: 16px;
 	color: white;
-	transition: transform 0.2s, box-shadow 0.2s;
+	transition: all var(--transition-normal);
 	
 	&:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+		box-shadow: 0 8px 24px rgba(0,0,0,0.15);
 	}
 `;
 
 const RewardTitle = styled.h3`
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 700;
 	margin-bottom: 8px;
 	display: flex;
 	align-items: center;
 	gap: 8px;
+	letter-spacing: -0.01em;
 `;
 
 const RewardDesc = styled.p`
-	font-size: 12px;
-	color: rgba(255,255,255,0.7);
-	line-height: 1.5;
+	font-size: 11.5px;
+	color: rgba(255,255,255,0.6);
+	line-height: 1.55;
 	margin-bottom: 12px;
 `;
 
@@ -272,30 +287,38 @@ const ReferralCodeBox = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	background: rgba(255, 255, 255, 0.1);
-	border: 1px dashed rgba(255, 255, 255, 0.3);
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px dashed rgba(255, 255, 255, 0.2);
 	padding: 8px 12px;
-	border-radius: 8px;
+	border-radius: var(--radius-sm);
 	cursor: pointer;
-	transition: background 0.2s;
+	transition: background var(--transition-fast);
 	
 	&:hover {
-		background: rgba(255, 255, 255, 0.2);
+		background: rgba(255, 255, 255, 0.12);
 	}
 	
 	span {
-		font-family: monospace;
+		font-family: 'SF Mono', 'Fira Code', monospace;
 		font-weight: bold;
-		font-size: 14px;
+		font-size: 13px;
+		letter-spacing: 0.05em;
 	}
 	
 	button {
 		background: transparent;
-		color: #fff;
+		color: rgba(255,255,255,0.8);
 		border: none;
-		font-size: 12px;
+		font-size: 11px;
 		font-weight: 700;
 		cursor: pointer;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		transition: color var(--transition-fast);
+		
+		&:hover {
+			color: #fff;
+		}
 	}
 `;
 
@@ -347,7 +370,7 @@ function Left(props) {
 			</NavMenu>
 			
 			<AITipWidget className="hide-on-close">
-				<WidgetHeader>✨ AI SMART TIP</WidgetHeader>
+				<WidgetHeader>✨ AI Smart Tip</WidgetHeader>
 				<TipText>Adding "Node.js" and "SQL" will increase your match rate with top startups by 42%.</TipText>
 				<TipAction>Update Profile</TipAction>
 			</AITipWidget>

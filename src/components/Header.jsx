@@ -5,15 +5,15 @@ import { signOutAPI } from "../action";
 
 const Container = styled.div`
 	background: var(--bg-nav);
-	backdrop-filter: blur(16px);
-	-webkit-backdrop-filter: blur(16px);
+	backdrop-filter: blur(20px) saturate(1.4);
+	-webkit-backdrop-filter: blur(20px) saturate(1.4);
 	border-bottom: 1px solid var(--border-color);
 	padding: 0 24px;
 	position: sticky;
 	top: 0;
 	left: 0;
 	z-index: 100;
-	transition: background 0.3s ease;
+	transition: background var(--transition-normal);
 `;
 
 const Content = styled.div`
@@ -30,21 +30,21 @@ const LogoWrap = styled.a`
 	align-items: center;
 	text-decoration: none;
 	margin-right: 24px;
-	transition: transform 0.2s ease;
+	transition: transform var(--transition-fast);
 	&:hover {
-		transform: scale(1.02);
+		transform: scale(1.03);
 	}
 `;
 
 const LogoText = styled.span`
-	font-size: 26px;
+	font-size: 24px;
 	font-weight: 700;
 	color: var(--nav-text-color);
 	letter-spacing: -0.5px;
 `;
 
 const LogoX = styled.span`
-	font-size: 30px;
+	font-size: 28px;
 	font-weight: 800;
 	background: var(--gradient-accent);
 	-webkit-background-clip: text;
@@ -70,22 +70,24 @@ const Search = styled.div`
 			border: none;
 			box-shadow: none;
 			background-color: var(--input-bg);
-			border-radius: 8px;
+			border-radius: var(--radius-sm);
 			color: var(--input-text);
 			width: 100%;
 			padding: 0 8px 0 44px;
 			line-height: 1.75;
 			font-weight: 400;
-			font-size: 14px;
+			font-size: 13.5px;
 			height: 40px;
 			vertical-align: text-top;
-			transition: all 0.3s ease;
+			transition: all var(--transition-normal);
+			letter-spacing: -0.01em;
 			&::placeholder {
 				color: var(--text-secondary);
 			}
 			&:focus {
 				background-color: var(--input-focus);
-				outline: 1px solid var(--accent-purple);
+				outline: 1px solid rgba(155, 79, 223, 0.4);
+				box-shadow: 0 0 0 3px rgba(155, 79, 223, 0.08);
 			}
 			@media (max-width: 768px) {
 				width: 140px;
@@ -105,7 +107,8 @@ const SearchIcon = styled.div`
 	justify-content: center;
 	img {
 		filter: var(--icon-filter);
-		width: 16px;
+		width: 15px;
+		opacity: 0.6;
 	}
 `;
 
@@ -118,7 +121,7 @@ const Nav = styled.nav`
 		bottom: 0;
 		height: 60px;
 		background: var(--bg-nav);
-		backdrop-filter: blur(10px);
+		backdrop-filter: blur(16px);
 		width: 100%;
 		border-top: 1px solid var(--border-color);
 	}
@@ -148,9 +151,10 @@ const NavListWrap = styled.ul`
 			bottom: 0;
 			left: 10%;
 			width: 80%;
-			height: 3px;
+			height: 2px;
 			background: var(--gradient-accent);
-			border-radius: 3px 3px 0 0;
+			border-radius: 2px 2px 0 0;
+			box-shadow: 0 0 8px rgba(155, 79, 223, 0.35);
 		}
 	}
 `;
@@ -160,39 +164,40 @@ const NavList = styled.li`
 	align-items: center;
 	position: relative;
 	height: 100%;
-	margin: 0 4px;
+	margin: 0 2px;
 	a, button {
 		align-items: center;
 		background: transparent;
 		border: none;
 		display: flex;
 		flex-direction: column;
-		font-size: 13px;
+		font-size: 12px;
 		font-weight: 500;
 		justify-content: center;
-		min-width: 90px;
+		min-width: 84px;
 		height: 100%;
 		text-decoration: none;
-		transition: all 0.2s ease;
+		transition: all var(--transition-fast);
 		cursor: pointer;
+		letter-spacing: -0.01em;
 		
 		img, .icon-svg {
-			width: 22px;
-			height: 22px;
+			width: 20px;
+			height: 20px;
 			filter: var(--icon-filter);
 			stroke: var(--text-secondary);
-			margin-bottom: 6px;
-			transition: all 0.2s ease;
+			margin-bottom: 5px;
+			transition: all var(--transition-fast);
 		}
 
 		span {
 			color: var(--text-secondary);
-			transition: all 0.2s ease;
+			transition: all var(--transition-fast);
 		}
 
 		&:hover {
 			span { color: var(--nav-text-color); }
-			img, .icon-svg { filter: var(--icon-hover); stroke: var(--nav-text-color); transform: translateY(-2px); }
+			img, .icon-svg { filter: var(--icon-hover); stroke: var(--nav-text-color); transform: translateY(-1px); }
 		}
 
 		@media (max-width: 768px) {
@@ -212,15 +217,15 @@ const SignOut = styled.div`
 	top: 68px;
 	background: var(--bg-card);
 	border: 1px solid var(--border-card);
-	border-radius: 8px;
+	border-radius: var(--radius-md);
 	width: 120px;
 	height: 44px;
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 600;
 	text-align: center;
 	display: none;
 	z-index: 15;
-	box-shadow: var(--card-shadow);
+	box-shadow: var(--card-shadow-hover);
 	a {
 		color: var(--text-card-primary);
 		width: 100%;
@@ -229,9 +234,10 @@ const SignOut = styled.div`
 		align-items: center;
 		justify-content: center;
 		min-height: 40px;
+		transition: all var(--transition-fast);
 		&:hover {
-			background: rgba(0,0,0,0.05);
-			border-radius: 8px;
+			background: rgba(0,0,0,0.04);
+			border-radius: var(--radius-md);
 			color: var(--accent-purple);
 		}
 	}
@@ -244,13 +250,13 @@ const User = styled(NavList)`
 	}
 	a > img {
 		border-radius: 50%;
-		width: 32px;
-		height: 32px;
+		width: 30px;
+		height: 30px;
 		filter: none !important;
 		margin-bottom: 0;
 		margin-right: 8px;
 		border: 2px solid transparent;
-		transition: all 0.3s ease;
+		transition: all var(--transition-normal);
 		transform: none !important;
 	}
 	a > span {
@@ -310,7 +316,7 @@ function Header(props) {
 								) : (
 									<svg className="icon-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
 								)}
-								<span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+								<span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
 							</button>
 						</NavList>
 						
