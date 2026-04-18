@@ -1,210 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-/* ─── 1. CSS RESET & VARIABLES ──────────────────────────────── */
-:root {
-  /* Color Palette: Deep Purple & Vibrant Blue */
-  --bg-color: #0B0815;        /* Very dark purple/black for main background */
-  --card-bg: #16102B;         /* Slightly lighter purple for cards/sidebar */
-  --card-hover: #1E163B;      /* Hover state for cards */
-  
-  --primary-blue: #3B82F6;    /* Vibrant Blue */
-  --primary-blue-hover: #2563EB;
-  --accent-purple: #8B5CF6;   /* Accent Purple for gradients/icons */
-  
-  --text-main: #F8FAFC;       /* Off-white text */
-  --text-muted: #94A3B8;      /* Gray/Blue muted text */
-  
-  --border-color: #2D234F;    /* Soft purple border */
-  
-  --sidebar-width: 260px;
-  --border-radius: 12px;
+body {
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root,
+html,
+body {
+	background-color: #f5f5f5;
+	box-sizing: border-box;
 }
 
-body, html {
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+html,
+body,
+i,
+img,
+small,
+label,
+li,
+ul,
+p,
+nav,
+span {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: none;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+body {
+	font-family: Arial, sans-serif;
 }
 
-button {
-  font-family: 'Inter', sans-serif;
-  cursor: pointer;
-  border: none;
-  outline: none;
-}
-
-input, textarea {
-  font-family: 'Inter', sans-serif;
-  outline: none;
-}
-
-/* ─── 2. THE SIDEBAR LAYOUT ────────────────────────────────── */
-
-/* Wraps the entire application */
-.app-wrapper {
-  display: flex;
-  min-height: 100vh;
-}
-
-/* Fixed Sidebar on the left */
-.sidebar {
-  width: var(--sidebar-width);
-  background-color: var(--card-bg);
-  border-right: 1px solid var(--border-color);
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  padding: 24px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  z-index: 50;
-}
-
-/* The scrollable area on the right */
-.main-content {
-  flex: 1;
-  margin-left: var(--sidebar-width); /* Pushes content past the fixed sidebar */
-  padding: 32px;
-  max-width: 1000px; /* Keeps the feed from stretching too wide on huge monitors */
-}
-
-/* ─── 3. CORE UI COMPONENTS ────────────────────────────────── */
-
-/* Generic Card (Used for posts, profile boxes, etc.) */
-.card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 20px;
-  margin-bottom: 20px;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-.card:hover {
-  border-color: var(--accent-purple);
-}
-
-/* Buttons */
-.btn-primary {
-  background-color: var(--primary-blue);
-  color: #ffffff;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-blue-hover);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: var(--primary-blue);
-  border: 1px solid var(--primary-blue);
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.btn-secondary:hover {
-  background-color: rgba(59, 130, 246, 0.1);
-}
-
-/* Inputs (Search bars, post creation) */
-.input-field {
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
-  padding: 12px 16px;
-  border-radius: 8px;
-  transition: border-color 0.2s ease;
-}
-
-.input-field:focus {
-  border-color: var(--primary-blue);
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-.input-field::placeholder {
-  color: var(--text-muted);
-}
-
-/* ─── 4. TYPOGRAPHY & UTILITIES ────────────────────────────── */
-
-.text-muted {
-  color: var(--text-muted);
-}
-
-.text-gradient {
-  background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.4s ease forwards;
-}
-
-/* Custom Scrollbar for a premium feel */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-color);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-purple);
-}
-
-/* Responsive: Hide sidebar on mobile and make main content full width */
-@media (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
-  .main-content {
-    margin-left: 0;
-    padding: 16px;
-  }
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
