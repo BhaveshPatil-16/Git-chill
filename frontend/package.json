@@ -1,0 +1,36 @@
+{
+  "name": "linkedin-clone",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@fontsource/inter": "^5.2.8",
+    "axios": "^1.15.0",
+    "face-api.js": "^0.22.2",
+    "firebase": "^8.10.1",
+    "firebase-tools": "^9.10.2",
+    "lucide-react": "^1.8.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-player": "^2.9.0",
+    "react-redux": "^7.2.4",
+    "react-router-dom": "^7.14.1",
+    "redux": "^4.1.0",
+    "redux-thunk": "^2.3.0",
+    "web-vitals": "^1.1.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "autoprefixer": "^10.4.14",
+    "dotenv-cli": "^11.0.0",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.4.19",
+    "vite": "^5.0.0"
+  },
+  "scripts": {
+    "start": "dotenv -e ../.env -- vite",
+    "build": "dotenv -e ../.env -- vite build",
+    "preview": "dotenv -e ../.env -- vite preview",
+    "dev": "dotenv -e ../.env -- vite"
+  }
+}
