@@ -1,78 +1,153 @@
-# LinkedIn Clone
+# hireX
 
-![LinkedIn Clone Demo](linkedin-gif.gif)
+> A premium professional networking & hiring platform for verified, experienced professionals (3+ years). Built with React + Vite on the frontend and Fastify on the backend.
 
-**_Built using React JS, Redux, Firebase & Styled-Components_** within a week. My first project after learning React JS referencing a tutorial on YouTube by _'Clever Programmer'_. Added some features apart from the tutorial on my own like:
+---
 
--   Post like functionality
--   Mobile responsiveness
+## 🏗 Project Structure
 
-## Features and Fuctionality
+```
+git-chill/
+├── backend/          # Fastify API server (Node.js)
+│   ├── src/
+│   │   ├── routes/       # API route handlers
+│   │   ├── plugins/      # Fastify plugins (auth, rbac)
+│   │   ├── services/     # Business logic (userRepository)
+│   │   ├── firebase.js   # Firebase Admin SDK init
+│   │   └── server.js     # Entry point
+│   └── package.json
+│
+├── frontend/         # React + Vite SPA
+│   ├── src/
+│   │   ├── components/   # UI components (Header, Sidebar, Main…)
+│   │   ├── pages/        # Route-level pages (SignIn, Signup)
+│   │   ├── action/       # Redux actions
+│   │   ├── reducers/     # Redux reducers
+│   │   ├── firebase/     # Firebase client SDK config
+│   │   └── index.jsx     # Entry point
+│   └── package.json
+│
+├── package.json      # Root — runs both with one command
+└── .env              # Environment variables (never committed)
+```
 
--   Login using Google (Firebase Authentication)
--   Create a new post
--   Share photos and videos (React player for videos)
--   Like posts
--   Realtime update likes and posts
--   Auto authenticate user on refresh
--   Sign Out
+---
 
-## How to build your own..?
+## ⚡ Quick Start
 
-1. Clone this repo
-1. Install all the dependencies
-    ```bash
-    npm i
-    ```
-1. Setup Firebase
+### 1. Clone the repo
 
-    - Create Firebase account
-    - Create a new project
-    - Create a web app for that
-    - Copy your config from there
+```bash
+git clone https://github.com/BhaveshPatil-16/Git-chill.git
+cd Git-chill
+```
 
-        - Select config option
-        - Paste those config inside firebase/config.js file
+### 2. Set up environment variables
 
-    - Setup authentication using Google
+Create a `.env` file in the project root:
 
-1. Tweak code as you like
-1. Let's build the optimized version
+```bash
+cp .env.example .env   # or copy manually — see section below
+```
 
-    ```bash
-    npm run build
-    ```
+> See **Environment Variables** section for all required keys.
 
-1. **Now for hosting on Firebase lets config Firebase locally**
+### 3. Install all dependencies — one command
 
-    - Install Firebase CLI
-    - Login to Firebase
+```bash
+npm install
+```
 
-        ```bash
-        firebase login
-        ```
+This automatically installs deps for **all three packages** (root, backend, frontend) via the `postinstall` hook. No need to `cd` into subdirectories.
 
-    - Initialize Firebase
+### 4. Start the full stack — one command
 
-        ```bash
-        firebase init
-        ```
+```bash
+npm run dev
+```
 
-    - Select hosting in the menu
-    - Select your respective project from the list
-    - Select 'build' as your hosting directory and other options as you want
-    - Let's deploy our clone and make it live
+| Service | URL |
+|---|---|
+| Frontend (Vite) | http://localhost:3000 |
+| Backend (Fastify) | http://localhost:3001 |
 
-        ```bash
-        firebase deploy
-        ```
+Output is colour-coded: **[BACKEND]** in cyan, **[FRONTEND]** in magenta.
 
-**That's it our clone is up and running share it now**
+---
 
-## Future Plans
+## 📦 Available Scripts
 
--   Might add more login methods
--   Post deleting functionality
--   Add comments on post
+Run all of these from the **project root**:
 
-**_NOTE: PLEASE LET ME KNOW IF YOU DISCOVERED ANY BUG OR YOU HAVE ANY SUGGESTIONS_**
+| Command | Description |
+|---|---|
+| `npm run dev` | Start frontend + backend concurrently |
+| `npm run frontend` | Start only the Vite dev server |
+| `npm run backend` | Start only the Fastify server |
+| `npm run build` | Build the frontend for production |
+
+---
+
+## 🔑 Environment Variables
+
+Create a `.env` file in the **project root** (it is `.gitignore`-d — never commit it).
+
+### Firebase Client SDK (used by frontend)
+
+```env
+REACT_APP_FIREBASE_API_KEY=
+REACT_APP_FIREBASE_AUTH_DOMAIN=
+REACT_APP_FIREBASE_PROJECT_ID=
+REACT_APP_FIREBASE_STORAGE_BUCKET=
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
+REACT_APP_FIREBASE_APP_ID=
+```
+
+### Firebase Admin SDK — Service Account (backend only)
+
+```env
+FIREBASE_SA_TYPE=service_account
+FIREBASE_SA_PROJECT_ID=
+FIREBASE_SA_PRIVATE_KEY_ID=
+FIREBASE_SA_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+FIREBASE_SA_CLIENT_EMAIL=
+FIREBASE_SA_CLIENT_ID=
+FIREBASE_SA_AUTH_URI=https://accounts.google.com/o/oauth2/auth
+FIREBASE_SA_TOKEN_URI=https://oauth2.googleapis.com/token
+FIREBASE_SA_AUTH_PROVIDER_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+FIREBASE_SA_CLIENT_CERT_URL=
+FIREBASE_SA_UNIVERSE_DOMAIN=googleapis.com
+```
+
+> **Private key**: Must be on one line with literal `\n` for newlines (copy exactly from Firebase Console → Project Settings → Service Accounts → Generate new key).
+
+---
+
+## 🔐 Authentication Flow
+
+| Method | Flow |
+|---|---|
+| Email/Password signup | Firebase Auth → 3-step wizard (credentials → face verification → role) |
+| Google / GitHub signup | Firebase popup OAuth → if new user → verification wizard |
+| Sign in | Email/Password or OAuth → `/feed` |
+
+---
+
+## 🚀 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, Vite 5, Tailwind CSS v3, Redux |
+| Backend | Fastify, Firebase Admin SDK |
+| Auth | Firebase Authentication |
+| Database | Cloud Firestore |
+| Storage | Firebase Storage |
+| Routing | React Router v7 |
+
+---
+
+## 📝 Notes for Contributors
+
+- **Three `node_modules`** exist — root, `frontend/`, `backend/`. This is normal for a monorepo. A single `npm install` at the root installs all three automatically.
+- **Never commit `.env`** — it is in `.gitignore`. The `serviceAccount.json` is a reference template with placeholder variable names only; real secrets live in `.env`.
+- **Active branch**: `develop`
