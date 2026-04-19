@@ -12,14 +12,23 @@ function Step1Credentials({ onComplete, signUpWithEmail, signInOAuth }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const validateForm = () => {
+    if (!name.trim()) return "Full name is required";
+    if (!email) return "Email is required";
+    if (!/\S+@\S+\.\S+/.test(email)) return "Please enter a valid email address";
+    if (!password) return "Password is required";
+    if (password.length < 6) return "Password must be at least 6 characters";
+    if (password !== confirmPassword) return "Passwords do not match";
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    setError('');
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
       return;
     }
     
@@ -34,15 +43,10 @@ function Step1Credentials({ onComplete, signUpWithEmail, signInOAuth }) {
       localStorage.removeItem('hirex_remember_password');
     }
 
-    try {
-      const user = await signUpWithEmail(name, email, password);
-      if (user && user.uid) {
-        onComplete({ name, email, userId: user.uid });
-      }
-    } catch (err) {
-      setError(err.message || 'Failed to create account');
-      setLoading(false);
-    }
+    // Defer account creation to the final step to prevent premature authentication
+    // Pass the credentials forward to Step 3
+    onComplete({ name, email, password, isOAuth: false });
+    setLoading(false);
   };
 
   const handleOAuth = async (provider) => {
@@ -53,7 +57,8 @@ function Step1Credentials({ onComplete, signUpWithEmail, signInOAuth }) {
         onComplete({ 
           name: user.displayName || 'User', 
           email: user.email, 
-          userId: user.uid 
+          userId: user.uid,
+          isOAuth: true
         });
       }
     } catch (err) {
@@ -63,7 +68,14 @@ function Step1Credentials({ onComplete, signUpWithEmail, signInOAuth }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="space-y-6">
+      {error && (
+        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm flex items-center gap-3 animate-shake">
+          <span className="text-lg">⚠️</span>
+          {error}
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-1">
         <label className="text-sm text-gray-400 pl-1">Full Name</label>
         <div className="relative">
@@ -137,7 +149,7 @@ function Step1Credentials({ onComplete, signUpWithEmail, signInOAuth }) {
         </label>
       </div>
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {/* error was here, removed since it's now at the top */}
 
       <button type="submit" disabled={loading} className="btn-primary mt-6">
         {loading ? 'Processing...' : 'Continue to Verification'}
@@ -166,6 +178,7 @@ function Step1Credentials({ onComplete, signUpWithEmail, signInOAuth }) {
         </div>
       </div>
     </form>
+    </div>
   );
 }
 

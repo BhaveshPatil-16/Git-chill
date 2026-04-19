@@ -3,12 +3,8 @@ import { connect } from "react-redux";
 import { Navigate } from "react-router-dom";
 import Main from "./Main";
 
-function Home(props) {
-	if (!props.user) {
-		return <Navigate to="/" />;
-	}
-
-	return <Main />;
+function Home({ showJobs }) {
+	return <Main showJobs={showJobs} />;
 }
 
 const mapStateToProps = (state) => ({

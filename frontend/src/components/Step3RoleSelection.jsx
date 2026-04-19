@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { User, Building2, UploadCloud, ArrowRight, CheckCircle } from 'lucide-react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { signUpWithEmailAPI } from '../action';
 
-export default function Step3RoleSelection({ formData: globalFormData, onComplete }) {
+function Step3RoleSelection({ formData: globalFormData, onComplete, signUpWithEmail }) {
   const [role, setRole] = useState(null); // 'individual' | 'business_owner'
   const [formData, setFormData] = useState({
     identity_proof_link: '',
+    id_type: 'aadhar',
+    id_number: '',
     company_domain: '',
     business_registration_number: '',
     documentBase64: null
@@ -17,18 +21,30 @@ export default function Step3RoleSelection({ formData: globalFormData, onComplet
     setLoading(true);
 
     try {
-      // 1. Register User in Backend (Sync with Firebase)
+      let finalUserId = globalFormData.userId;
+
+      // 1. Create Firebase User NOW if this was an email signup
+      if (!globalFormData.isOAuth && !finalUserId) {
+        const user = await signUpWithEmail(globalFormData.name, globalFormData.email, globalFormData.password);
+        if (user && user.uid) {
+          finalUserId = user.uid;
+        } else {
+          throw new Error("Failed to create Firebase account");
+        }
+      }
+
+      // 2. Register User in Backend (Sync with Firebase)
       const registerRes = await axios.post('http://localhost:3001/api/v2/auth/register', {
         name: globalFormData.name || 'User',
         email: globalFormData.email,
-        firebaseUid: globalFormData.userId, // Link Fastify DB to Firebase
+        firebaseUid: finalUserId, // Link Fastify DB to Firebase
         role: role,
         company: formData.company_domain || ''
       });
 
-      const userId = registerRes.data.userId || globalFormData.userId;
+      const userId = registerRes.data.userId || finalUserId;
 
-      // 2. Verify User & Upload Files
+      // 3. Verify User & Upload Files
       const docs = formData.documentBase64 ? [formData.documentBase64] : [];
       
       await axios.post('http://localhost:3001/api/v2/auth/verify', {
@@ -94,7 +110,7 @@ export default function Step3RoleSelection({ formData: globalFormData, onComplet
           {role === 'individual' && (
             <div className="space-y-4">
               <div className="space-y-1">
-                <label className="text-sm text-gray-400 pl-1">Professional Proof Link (e.g., Portfolio, GitHub, Company Website)</label>
+                <label className="text-sm text-gray-400 pl-1">Professional Proof Link (e.g., Portfolio, GitHub, Website)</label>
                 <input 
                   type="url" 
                   name="identity_proof_link"
@@ -102,8 +118,37 @@ export default function Step3RoleSelection({ formData: globalFormData, onComplet
                   value={formData.identity_proof_link}
                   onChange={handleInputChange}
                   className="input-field" 
-                  placeholder="https://github.com/username or https://yourportfolio.com" 
+                  placeholder="https://github.com/username" 
                 />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-sm text-gray-400 pl-1">Select ID Type</label>
+                  <select
+                    name="id_type"
+                    value={formData.id_type}
+                    onChange={handleInputChange}
+                    className="input-field appearance-none cursor-pointer"
+                  >
+                    <option value="aadhar" className="bg-[#1c1c24]">Aadhar Card</option>
+                    <option value="pan" className="bg-[#1c1c24]">PAN Card</option>
+                    <option value="driving" className="bg-[#1c1c24]">Driving License</option>
+                    <option value="passport" className="bg-[#1c1c24]">Passport</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm text-gray-400 pl-1">ID Number</label>
+                  <input 
+                    type="text" 
+                    name="id_number"
+                    required
+                    value={formData.id_number}
+                    onChange={handleInputChange}
+                    className="input-field" 
+                    placeholder="Enter ID number" 
+                  />
+                </div>
               </div>
               
               <div className="border border-dashed border-white/20 rounded-xl p-6 text-center bg-black/20 relative cursor-pointer">
@@ -170,3 +215,9 @@ export default function Step3RoleSelection({ formData: globalFormData, onComplet
     </div>
   );
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  signUpWithEmail: (name, email, password) => dispatch(signUpWithEmailAPI(name, email, password))
+});
+
+export default connect(null, mapDispatchToProps)(Step3RoleSelection);

@@ -17,8 +17,9 @@ function Login(props) {
 
 			{/* Nav */}
 			<nav className="max-w-[1128px] mx-auto py-4 px-6 flex flex-nowrap items-center justify-between relative z-10">
-				<a href="/" className="flex items-center no-underline transition-transform duration-[180ms] hover:scale-[1.03]">
-					<span className="text-[30px] font-bold text-white tracking-[-1px]">hire</span>
+				<a href="/" className="flex items-center no-underline duration-[180ms]">
+					<span className="text-[30px] font-extrabold" style={{ background: "var(--gradient-accent)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>H</span>
+					<span className="text-[30px] font-bold text-white tracking-[-1px]">ire</span>
 					<span className="text-[36px] font-extrabold ml-[-2px]" style={{ background: "linear-gradient(135deg, #b47aef 0%, #5b9cf5 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>X</span>
 				</a>
 				<div className="flex items-center gap-2">
@@ -35,8 +36,8 @@ function Login(props) {
 							background: "var(--gradient-accent)",
 							boxShadow: "0 2px 16px rgba(155,79,223,0.25), 0 0 0 1px rgba(155,79,223,0.1)",
 						}}
-						onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 6px 28px rgba(155,79,223,0.4), 0 0 0 1px rgba(155,79,223,0.2)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-						onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 2px 16px rgba(155,79,223,0.25), 0 0 0 1px rgba(155,79,223,0.1)"; e.currentTarget.style.transform = ""; }}
+						onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 6px 28px rgba(155,79,223,0.4), 0 0 0 1px rgba(155,79,223,0.2)"; }}
+						onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 2px 16px rgba(155,79,223,0.25), 0 0 0 1px rgba(155,79,223,0.1)"; }}
 					>
 						Sign in
 					</button>
@@ -49,14 +50,14 @@ function Login(props) {
 
 					{/* Left: Text + CTA */}
 					<div className="w-full mb-10 md:w-1/2 md:mb-0 flex flex-col items-center md:items-start" style={{ animation: "slideUp 0.7s ease-out both" }}>
-						<h1 className="text-[36px] md:text-[54px] text-white font-extrabold leading-[1.1] mb-5 tracking-[-0.045em]">
-							Find your next<br/>
-							<span style={{ background: "linear-gradient(135deg, #c084fc 0%, #60a5fa 50%, #a78bfa 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-								great opportunity
+						<h1 className="text-[36px] md:text-[64px] text-white font-black leading-[1.05] mb-6 tracking-[-0.05em]">
+							Connect with<br/>
+							<span style={{ background: "linear-gradient(135deg, #c084fc 0%, #6366f1 50%, #3b82f6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+								Top Talent
 							</span>
 						</h1>
-						<p className="text-[17px] leading-[1.65] text-white/65 mb-9 max-w-[430px] font-normal tracking-[-0.01em]">
-							Join hireX to connect, share, and discover the world's most innovative professionals. A dedicated ecosystem for quality hiring and role matching.
+						<p className="text-[18px] leading-[1.65] text-white/50 mb-9 max-w-[480px] font-medium tracking-tight">
+							The exclusive ecosystem where the world's most innovative professionals and businesses discover, verify, and hire each other.
 						</p>
 
 						{/* Glass Notice Card */}
@@ -88,39 +89,101 @@ function Login(props) {
 									background: "var(--gradient-accent)",
 									boxShadow: "0 2px 16px rgba(155,79,223,0.25)",
 								}}
-								onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 6px 28px rgba(155,79,223,0.4)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-								onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 2px 16px rgba(155,79,223,0.25)"; e.currentTarget.style.transform = ""; }}
+								onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 6px 28px rgba(155,79,223,0.4)"; }}
+								onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 2px 16px rgba(155,79,223,0.25)"; }}
 							>
 								Get Started
 							</button>
 						</div>
 
 						{/* Trust Row */}
-						<div className="flex items-center gap-5 mt-7" style={{ animation: "slideUp 0.7s ease-out 0.4s both" }}>
-							<div className="flex items-center gap-1.5 text-[12px] text-white/40 font-medium tracking-[-0.01em]">
-								<span className="text-[14px] opacity-70">🔒</span> Enterprise-grade security
-							</div>
-							<div className="flex items-center gap-1.5 text-[12px] text-white/40 font-medium tracking-[-0.01em]">
-								<span className="text-[14px] opacity-70">✓</span> 50k+ verified professionals
+						<div className="flex flex-col gap-6 mt-12 w-full" style={{ animation: "slideUp 0.7s ease-out 0.4s both" }}>
+							<div className="flex items-center gap-8">
+								<div className="flex flex-col">
+									<span className="text-[24px] font-bold text-white tracking-tight">50k+</span>
+									<span className="text-[12px] text-white/30 uppercase tracking-widest font-bold">Professionals</span>
+								</div>
+								<div className="w-[1px] h-8 bg-white/10" />
+								<div className="flex flex-col">
+									<span className="text-[24px] font-bold text-white tracking-tight">12k+</span>
+									<span className="text-[12px] text-white/30 uppercase tracking-widest font-bold">Verified Orgs</span>
+								</div>
+								<div className="w-[1px] h-8 bg-white/10" />
+								<div className="flex flex-col">
+									<span className="text-[24px] font-bold text-white tracking-tight">98%</span>
+									<span className="text-[12px] text-white/30 uppercase tracking-widest font-bold">Match Rate</span>
+								</div>
 							</div>
 						</div>
 					</div>
 
-					{/* Right: Hero Image */}
-					<div className="w-full flex justify-center md:w-[45%]" style={{ animation: "slideUp 0.7s ease-out 0.2s both" }}>
-						<div className="relative w-full max-w-[480px]">
-							{/* Glow behind image */}
+					{/* Right: Hero Image Container */}
+					<div className="w-full flex justify-center md:w-[50%]" style={{ animation: "slideUp 0.7s ease-out 0.2s both" }}>
+						<div className="relative w-full max-w-[540px]">
 							<div
-								className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 rounded-full -z-10"
-								style={{ background: "radial-gradient(circle, rgba(155,79,223,0.12) 0%, rgba(54,116,224,0.06) 40%, transparent 70%)", filter: "blur(40px)" }}
+								className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] rounded-full -z-10"
+								style={{ background: "radial-gradient(circle, rgba(155,79,223,0.15) 0%, rgba(54,116,224,0.08) 40%, transparent 70%)", filter: "blur(60px)" }}
 							/>
-							<img
-								src="/images/login-hero.svg"
-								alt="Professionals connecting"
-								className="w-full"
-								style={{ filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.35))" }}
-							/>
+							<div className="relative animate-subtlePulse">
+								<img
+									src="/images/login-hero.svg"
+									alt="Professionals connecting"
+									className="w-full h-auto drop-shadow-[0_32px_64px_rgba(0,0,0,0.4)]"
+								/>
+								{/* Floating badges */}
+								<div className="absolute -top-4 -right-4 bg-white/5 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl animate-bounce" style={{ animationDuration: '4s' }}>
+									<div className="flex items-center gap-3">
+										<div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center text-white text-[20px]">✓</div>
+										<div>
+											<div className="text-[12px] font-bold text-white">Identity Verified</div>
+											<div className="text-[10px] text-white/40">Secure Professional Network</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* Expansion: Features Section */}
+			<section className="relative z-10 w-full max-w-[1128px] mx-auto px-6 pb-[120px]">
+				<div className="text-center mb-16">
+					<h2 className="text-[32px] md:text-[42px] font-black text-white tracking-tight mb-4">Built for the Modern Professional</h2>
+					<p className="text-white/40 max-w-[600px] mx-auto">Experience a platform that prioritizes authenticity, security, and quality connections over noise.</p>
+				</div>
+
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+					{[
+						{ title: "Smart Matching", icon: "🧠", desc: "Our AI-driven engine connects you with roles that truly match your verified skill set and experience level." },
+						{ title: "Direct Networking", icon: "🤝", desc: "Skip the middlemen. Connect directly with hiring managers and founders in a high-signal environment." },
+						{ title: "Identity Guard", icon: "🛡️", desc: "Every profile undergoes a mandatory identity verification process to ensure zero spam and 100% authenticity." }
+					].map((feature, i) => (
+						<div 
+							key={i} 
+							className="bg-white/[0.03] border border-white/5 p-8 rounded-[32px] transition-all duration-300 hover:bg-white/[0.06] hover:border-white/10 group"
+						>
+							<div className="text-[40px] mb-6 inline-block">{feature.icon}</div>
+							<h3 className="text-[20px] font-bold text-white mb-3 tracking-tight">{feature.title}</h3>
+							<p className="text-white/40 leading-relaxed text-[14px]">{feature.desc}</p>
+						</div>
+					))}
+				</div>
+			</section>
+
+			{/* Final CTA */}
+			<section className="relative z-10 w-full max-w-[1128px] mx-auto px-6 pb-[160px]">
+				<div className="bg-gradient-to-br from-[#1c1c24] to-[#0a0a0f] border border-white/5 rounded-[48px] p-12 md:p-20 text-center overflow-hidden relative">
+					<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(155,79,223,0.1)_0%,transparent_70%)]" />
+					<div className="relative z-10">
+						<h2 className="text-[36px] md:text-[52px] font-black text-white tracking-tighter mb-6">Ready to elevate your career?</h2>
+						<p className="text-white/50 text-[18px] mb-10 max-w-[500px] mx-auto">Join thousands of verified professionals already on the platform.</p>
+						<button 
+							onClick={() => navigate('/signup')}
+							className="h-16 px-12 rounded-full bg-white text-black font-black text-[18px] transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+						>
+							Create Free Account
+						</button>
 					</div>
 				</div>
 			</section>

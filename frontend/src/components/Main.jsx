@@ -1,60 +1,35 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 
 /* ─────────────────────────────────────────────
-   LIQUID GLASS NAV — Tailwind + inline styles
+   LIQUID MINIMAL NAV
+   - Satisfying sliding/stretching motion
+   - No gradients, glare, or reflections
 ───────────────────────────────────────────── */
-function LiquidGlassNav({ activeTab, setActiveTab }) {
-	const navRef = useRef(null);
+function LiquidMinimalNav({ activeTab, setActiveTab, showJobs }) {
 	const pillRef = useRef(null);
-	const glareInnerRef = useRef(null);
 	const btnRefs = useRef({});
-	const tabKeys = ["jobs", "market", "network"];
+	const tabKeys = ["jobs", "market", "network"].filter(k => k !== 'jobs' || showJobs);
 
 	const updatePill = useCallback((key, smooth = true) => {
 		const btn = btnRefs.current[key];
 		const pill = pillRef.current;
 		if (!btn || !pill) return;
-		if (!smooth) {
-			pill.style.transition = "none";
-		} else {
-			pill.style.transition =
-				"transform 0.5s cubic-bezier(0.34,1.2,0.64,1), width 0.5s cubic-bezier(0.34,1.2,0.64,1)";
-		}
+		
+		pill.style.transition = smooth 
+			? "transform 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.4, 0.64, 1)" 
+			: "none";
 		pill.style.width = `${btn.offsetWidth}px`;
 		pill.style.transform = `translateX(${btn.offsetLeft}px)`;
 	}, []);
 
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			updatePill(activeTab, false);
-			if (pillRef.current) void pillRef.current.offsetWidth;
-		}, 50);
+		const timer = setTimeout(() => updatePill(activeTab, false), 50);
 		return () => clearTimeout(timer);
 	}, []); // eslint-disable-line
 
 	useEffect(() => {
 		updatePill(activeTab, true);
 	}, [activeTab, updatePill]);
-
-	useEffect(() => {
-		const handleResize = () => updatePill(activeTab, false);
-		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
-	}, [activeTab, updatePill]);
-
-	const handleMouseMove = (e) => {
-		const nav = navRef.current;
-		const glare = glareInnerRef.current;
-		if (!nav || !glare) return;
-		const rect = nav.getBoundingClientRect();
-		glare.style.setProperty("--gx", `${e.clientX - rect.left}px`);
-		glare.style.setProperty("--gy", `${e.clientY - rect.top}px`);
-		glare.style.opacity = "1";
-	};
-
-	const handleMouseLeave = () => {
-		if (glareInnerRef.current) glareInnerRef.current.style.opacity = "0";
-	};
 
 	const tabLabels = {
 		jobs:    { icon: "💼", label: "Jobs Board" },
@@ -64,69 +39,38 @@ function LiquidGlassNav({ activeTab, setActiveTab }) {
 
 	return (
 		<div
-			ref={navRef}
-			onMouseMove={handleMouseMove}
-			onMouseLeave={handleMouseLeave}
 			style={{
 				position: "relative",
-				display: "flex",
+				display: "inline-flex",
 				alignItems: "center",
 				padding: "6px",
-				borderRadius: "99px",
-				background: "rgba(255,255,255,0.12)",
-				backdropFilter: "blur(40px) saturate(180%)",
-				WebkitBackdropFilter: "blur(40px) saturate(180%)",
-				boxShadow:
-					"0 20px 50px -15px rgba(0,0,0,0.15), 0 8px 20px -8px rgba(0,0,0,0.1), inset 0 1.5px 2px -0.5px rgba(255,255,255,0.5), inset 0 -1px 3px -1px rgba(255,255,255,0.15), inset 0 0 0 0.5px rgba(255,255,255,0.25)",
-				overflow: "hidden",
+				borderRadius: "24px",
+				background: "var(--bg-subtle)",
+				border: "1px solid var(--border-subtle)",
 				zIndex: 10,
+				width: "100%",
+				maxWidth: "600px",
+				margin: "0 auto",
 			}}
 		>
-			{/* Top reflection */}
-			<div
-				style={{
-					position: "absolute",
-					top: 1, left: 1, right: 1,
-					height: "50%",
-					borderRadius: "99px 99px 20px 20px",
-					background: "linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 100%)",
-					pointerEvents: "none",
-					zIndex: 6,
-				}}
-			/>
-
-			{/* Mouse-tracking glare */}
-			<div style={{ position: "absolute", inset: 0, borderRadius: "99px", overflow: "hidden", pointerEvents: "none", zIndex: 5 }}>
-				<div
-					ref={glareInnerRef}
-					style={{
-						position: "absolute",
-						inset: 0,
-						opacity: 0,
-						transition: "opacity 0.3s ease",
-						background: "radial-gradient(circle 80px at var(--gx, 50%) var(--gy, 50%), rgba(255,255,255,0.35) 0%, transparent 100%)",
-						mixBlendMode: "overlay",
-					}}
-				/>
-			</div>
-
-			{/* Sliding active pill */}
+			{/* Liquid Sliding active pill */}
 			<div
 				ref={pillRef}
 				style={{
 					position: "absolute",
-					top: 6, left: 6,
+					top: 6,
+					left: 0,
 					height: "calc(100% - 12px)",
-					background: "rgba(255,255,255,0.55)",
-					borderRadius: "99px",
-					boxShadow: "0 4px 14px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 1px rgba(255,255,255,0.7)",
+					background: "var(--text-card-primary)",
+					borderRadius: "18px",
+					boxShadow: "var(--card-shadow)",
 					zIndex: 1,
 					willChange: "transform, width",
 				}}
 			/>
 
 			{/* Tab buttons */}
-			<div style={{ position: "relative", display: "flex", gap: 2, zIndex: 3, width: "100%" }}>
+			<div style={{ position: "relative", display: "flex", width: "100%", zIndex: 2 }}>
 				{tabKeys.map((key) => (
 					<button
 						key={key}
@@ -136,25 +80,25 @@ function LiquidGlassNav({ activeTab, setActiveTab }) {
 							flex: 1,
 							background: "transparent",
 							border: "none",
-							padding: "0 20px",
-							height: 44,
-							borderRadius: "99px",
-							fontSize: "13.5px",
-							fontWeight: 600,
-							color: activeTab === key ? "var(--text-card-primary)" : "rgba(255,255,255,0.5)",
+							padding: "12px 20px",
+							fontSize: "13px",
+							fontWeight: 800,
+							color: activeTab === key ? "var(--bg-nav)" : "var(--text-secondary)",
 							cursor: "pointer",
-							transition: "color 0.3s ease",
+							transition: "color 0.4s ease",
 							outline: "none",
-							zIndex: 2,
-							letterSpacing: "-0.01em",
 							whiteSpace: "nowrap",
 							fontFamily: "inherit",
+							display: "flex",
+							alignItems: "center",
+							gap: "8px",
+							justifyContent: "center",
+							textTransform: "uppercase",
+							letterSpacing: "0.05em",
 						}}
 					>
-						<div style={{ display: "flex", alignItems: "center", gap: 7, justifyContent: "center", pointerEvents: "none" }}>
-							<span>{tabLabels[key].icon}</span>
-							<span>{tabLabels[key].label}</span>
-						</div>
+						<span>{tabLabels[key].icon}</span>
+						<span>{tabLabels[key].label}</span>
 					</button>
 				))}
 			</div>
@@ -195,62 +139,77 @@ function JobsFeed() {
 
 	return (
 		<>
-			{/* Sponsored Banner */}
-			<div className="bg-gradient-to-r from-[#3674e0]/10 to-[#9b4fdf]/10 border-l-[3px] border-[#9b4fdf] rounded-lg p-4 flex items-center justify-between mb-1">
-				<div className="flex flex-col gap-1">
-					<span className="text-[10px] font-bold text-[#9b4fdf] uppercase tracking-widest">Sponsored</span>
-					<p className="text-[14px] text-[#0f172a] font-medium tracking-tight">Scale your startup with AWS Activate. Get up to $100k in credits.</p>
+			{/* Sponsored Banner — High Visibility */}
+			<div className="relative overflow-hidden bg-gradient-to-r from-[#3674e0]/15 via-[#9b4fdf]/20 to-[#3674e0]/15 border border-white/10 rounded-2xl p-6 flex items-center justify-between mb-6 shadow-[0_8px_32px_rgba(155,79,223,0.12)] transition-all duration-300 hover:shadow-[0_12px_48px_rgba(155,79,223,0.2)] group cursor-default">
+				{/* Background Glow */}
+				<div className="absolute top-[-50%] left-[-20%] w-[140%] h-[200%] bg-[radial-gradient(circle_at_center,rgba(155,79,223,0.15)_0%,transparent_70%)] animate-subtlePulse pointer-events-none" />
+				
+				<div className="relative z-10 flex flex-col gap-2">
+					<div className="flex items-center gap-2">
+						<span className="bg-gradient-to-r from-[#9b4fdf] to-[#3674e0] text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest shadow-sm">Sponsored</span>
+						<span className="text-white/40 text-[11px] font-medium tracking-tight">Verified Partner</span>
+					</div>
+					<p className="text-[16px] text-white font-bold tracking-tight leading-tight max-w-[500px]">
+						Scale your startup with <span className="text-[#9b4fdf]">AWS Activate</span>. Get up to $100k in credits and expert support.
+					</p>
 				</div>
-				<button className="bg-gradient-to-br from-[#9b4fdf] to-[#3674e0] text-white border-none py-2 px-4 rounded-full font-bold text-[12px] cursor-pointer shadow-[0_2px_8px_rgba(155,79,223,0.2)] transition-all duration-200 hover:-translate-y-px hover:shadow-[0_4px_16px_rgba(155,79,223,0.35)] whitespace-nowrap">Apply Now</button>
+				<button className="relative z-10 bg-white text-[#0f172a] border-none py-3 px-6 rounded-xl font-bold text-[13px] cursor-pointer shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(255,255,255,0.3)] active:scale-95 whitespace-nowrap">
+					Claim Credits
+				</button>
 			</div>
 
-			{jobs.map((job, idx) => (
-				<div
-					key={idx}
-					className="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] mb-1 transition-all duration-[260ms] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-0.5"
-					style={{ boxShadow: "var(--card-shadow)" }}
-				>
-					<div className="flex items-start justify-between mb-4">
-						<div className="flex items-center gap-3">
-							<img src={job.logo} alt={job.company} className="w-12 h-12 rounded-lg object-contain p-1.5 bg-[#f8f9fb] border border-[var(--border-card)] transition-transform duration-[180ms] hover:scale-105" />
-							<div className="flex flex-col gap-0.5">
-								<div className="text-[14px] font-semibold text-[var(--text-card-primary)] flex items-center gap-1.5 tracking-[-0.02em]">
-									{job.company}
-									<span className="bg-[#eef0ff] text-[#4338ca] text-[10px] px-1.5 py-0.5 rounded-[10px] font-semibold">✓ Verified</span>
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+				{jobs.map((job, idx) => (
+					<div
+						key={idx}
+						className="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] flex flex-col transition-all duration-[260ms] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1"
+						style={{ boxShadow: "var(--card-shadow)" }}
+					>
+						<div className="flex items-start justify-between mb-4">
+							<div className="flex items-center gap-3">
+								<img src={job.logo} alt={job.company} className="w-12 h-12 rounded-lg object-contain p-1.5 bg-[#f8f9fb] border border-[var(--border-card)] duration-[180ms]" />
+								<div className="flex flex-col gap-0.5">
+									<div className="text-[14px] font-semibold text-[var(--text-card-primary)] flex items-center gap-1.5 tracking-[-0.02em]">
+										{job.company}
+										<span className="bg-[#eef0ff] text-[#4338ca] text-[10px] px-1.5 py-0.5 rounded-[10px] font-semibold">✓</span>
+									</div>
+									<span className="text-[11px] text-[var(--text-card-muted)]">Posted {job.posted}</span>
 								</div>
-								<span className="text-[11.5px] text-[var(--text-card-muted)] tracking-[-0.01em]">Posted {job.posted}</span>
+							</div>
+							<span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border uppercase tracking-wider ${job.isFresher ? "bg-[rgba(13,147,98,0.08)] text-[#0d7c52] border-[rgba(13,147,98,0.15)]" : "bg-[rgba(217,154,28,0.08)] text-[#96680a] border-[rgba(217,154,28,0.15)]"}`}>
+								{job.isFresher ? "Entry" : "Senior"}
+							</span>
+						</div>
+
+						<h3 className="text-[17px] font-bold text-[var(--text-card-primary)] mb-3 tracking-[-0.03em] leading-[1.3] min-h-[44px] line-clamp-2">{job.title}</h3>
+
+						<div className="flex flex-col gap-2 mb-4 text-[12px] text-[var(--text-card-secondary)] font-medium">
+							<div className="flex items-center gap-2">
+								<span className="opacity-60 text-[14px]">📍</span> {job.location}
+							</div>
+							<div className="flex items-center gap-2">
+								<span className="opacity-60 text-[14px]">💰</span> <strong className="text-[var(--accent-green)] font-bold">{job.salary}</strong>
 							</div>
 						</div>
-						<span className={`text-[11px] font-semibold px-3 py-1 rounded-full border tracking-[-0.01em] ${job.isFresher ? "bg-[rgba(13,147,98,0.08)] text-[#0d7c52] border-[rgba(13,147,98,0.15)]" : "bg-[rgba(217,154,28,0.08)] text-[#96680a] border-[rgba(217,154,28,0.15)]"}`}>
-							{job.exp}
-						</span>
-					</div>
 
-					<h3 className="text-[18px] font-bold text-[var(--text-card-primary)] mb-3 tracking-[-0.03em] leading-[1.35]">{job.title}</h3>
+						<div className="flex gap-1.5 flex-wrap mb-6 flex-1">
+							{job.skills.map((s, i) => (
+								<span
+									key={i}
+									className="bg-[var(--bg-subtle)] text-[var(--text-card-secondary)] px-3 py-0.5 rounded-full text-[11px] font-medium border border-[var(--border-subtle)]"
+								>
+									{s}
+								</span>
+							))}
+						</div>
 
-					<div className="flex flex-wrap gap-3 mb-4 text-[13px] text-[var(--text-card-secondary)] font-normal tracking-[-0.01em]">
-						<span>📍 {job.location}</span>
-						<span>💼 {job.type}</span>
-						<span>💰 <strong className="text-[var(--accent-green)] font-bold">{job.salary}</strong></span>
+						<div className="flex gap-2 pt-4 border-t border-[var(--border-subtle)]">
+							<button className="flex-1 bg-gradient-to-r from-[var(--accent-purple)] to-[var(--accent-blue)] text-white border-none py-2.5 px-4 rounded-xl font-bold text-[12px] cursor-pointer shadow-md transition-all duration-[180ms] hover:shadow-lg hover:-translate-y-0.5 active:scale-95">Easy Apply</button>
+							<button className="bg-transparent border border-[var(--border-card)] text-[var(--text-card-secondary)] rounded-xl px-4 font-bold text-[12px] cursor-pointer transition-all duration-[180ms] hover:border-[var(--text-card-secondary)] hover:bg-[var(--bg-subtle-hover)]">Save</button>
+						</div>
 					</div>
-
-					<div className="flex gap-1.5 flex-wrap mb-4">
-						{job.skills.map((s, i) => (
-							<span
-								key={i}
-								className="bg-black/[0.03] text-[var(--text-card-secondary)] px-3.5 py-1 rounded-full text-[12px] font-medium border border-[var(--border-card)] tracking-[-0.01em] transition-all duration-[180ms] cursor-default hover:bg-[rgba(155,79,223,0.06)] hover:border-[rgba(155,79,223,0.2)] hover:text-[var(--accent-purple)] hover:-translate-y-px"
-							>
-								{s}
-							</span>
-						))}
-					</div>
-
-					<div className="flex gap-2 mt-5 pt-4 border-t border-black/[0.04]">
-						<button className="flex-1 bg-gradient-to-r from-[var(--accent-purple)] to-[var(--accent-blue)] text-white border-none py-2.5 px-6 rounded-lg font-semibold text-[13px] cursor-pointer shadow-[0_2px_8px_rgba(155,79,223,0.15)] tracking-[-0.01em] transition-all duration-[180ms] hover:shadow-[0_4px_20px_rgba(155,79,223,0.3)] hover:-translate-y-px active:translate-y-0 active:scale-[0.98]">Easy Apply</button>
-						<button className="bg-transparent border border-[var(--border-card)] text-[var(--text-card-secondary)] rounded-lg px-5 font-semibold text-[13px] cursor-pointer tracking-[-0.01em] transition-all duration-[180ms] hover:border-[var(--text-card-secondary)] hover:bg-black/[0.02]">Save</button>
-					</div>
-				</div>
-			))}
+				))}
+			</div>
 		</>
 	);
 }
@@ -276,21 +235,23 @@ function MarketplaceFeed() {
 
 	return (
 		<>
-			{opps.map((opp, idx) => (
-				<div
-					key={idx}
-					className="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] mb-1 transition-all duration-[260ms] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-0.5"
-					style={{ boxShadow: "var(--card-shadow)" }}
-				>
-					<span className="bg-[rgba(155,79,223,0.06)] text-[#7c2dbd] px-3 py-1 rounded-[6px] text-[11px] font-bold uppercase mb-3 inline-block border border-[rgba(155,79,223,0.1)] tracking-[0.03em]">
-						{opp.type}
-					</span>
-					<h3 className="text-[18px] font-bold text-[var(--text-card-primary)] mb-3 tracking-[-0.03em] leading-[1.35]">{opp.title}</h3>
-					<div className="text-[13px] text-[var(--text-card-secondary)] mb-3 font-medium tracking-[-0.01em]">{opp.author}</div>
-					<p className="text-[14px] text-[var(--text-card-primary)] leading-[1.65] mb-5 tracking-[-0.01em]">{opp.desc}</p>
-					<button className="bg-gradient-to-r from-[var(--accent-purple)] to-[var(--accent-blue)] text-white border-none py-2.5 px-6 rounded-lg font-semibold text-[13px] cursor-pointer tracking-[-0.01em] transition-all duration-[180ms] hover:shadow-[0_4px_20px_rgba(155,79,223,0.3)] hover:-translate-y-px active:scale-[0.97]">Contact Privately</button>
-				</div>
-			))}
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+				{opps.map((opp, idx) => (
+					<div
+						key={idx}
+						className="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] flex flex-col transition-all duration-[260ms] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1"
+						style={{ boxShadow: "var(--card-shadow)" }}
+					>
+						<span className="bg-[rgba(155,79,223,0.06)] text-[#7c2dbd] px-3 py-1 rounded-[6px] text-[10px] font-bold uppercase mb-4 inline-block border border-[rgba(155,79,223,0.1)] tracking-[0.05em] self-start">
+							{opp.type}
+						</span>
+						<h3 className="text-[17px] font-bold text-[var(--text-card-primary)] mb-2 tracking-[-0.03em] leading-[1.3] line-clamp-2 min-h-[44px]">{opp.title}</h3>
+						<div className="text-[12px] text-[var(--text-card-secondary)] mb-4 font-semibold tracking-[-0.01em]">{opp.author}</div>
+						<p className="text-[13px] text-[var(--text-card-primary)] leading-[1.6] mb-6 tracking-[-0.01em] line-clamp-3 flex-1">{opp.desc}</p>
+						<button className="bg-gradient-to-r from-[var(--accent-purple)] to-[var(--accent-blue)] text-white border-none py-2.5 px-6 rounded-xl font-bold text-[12px] cursor-pointer tracking-[-0.01em] transition-all duration-[180ms] hover:shadow-lg hover:-translate-y-0.5 active:scale-95">Contact Privately</button>
+					</div>
+				))}
+			</div>
 		</>
 	);
 }
@@ -316,7 +277,7 @@ function NetworkingFeed() {
 			</p>
 			<div className="mt-3.5 flex gap-1.5">
 				{["#React", "#WebDev"].map((tag) => (
-					<span key={tag} className="bg-black/[0.03] text-[var(--text-card-secondary)] px-3.5 py-1 rounded-full text-[12px] font-medium border border-[var(--border-card)] tracking-[-0.01em] hover:bg-[rgba(155,79,223,0.06)] hover:border-[rgba(155,79,223,0.2)] hover:text-[var(--accent-purple)] transition-all duration-[180ms] cursor-default">
+					<span key={tag} className="bg-[var(--bg-subtle)] text-[var(--text-card-secondary)] px-3.5 py-1 rounded-full text-[12px] font-medium border border-[var(--border-subtle)] tracking-[-0.01em] hover:bg-[rgba(155,79,223,0.06)] hover:border-[rgba(155,79,223,0.2)] hover:text-[var(--accent-purple)] transition-all duration-[180ms] cursor-default">
 						{tag}
 					</span>
 				))}
@@ -328,13 +289,19 @@ function NetworkingFeed() {
 /* ─────────────────────────────────────────────
    MAIN
 ───────────────────────────────────────────── */
-function Main() {
-	const [activeTab, setActiveTab] = useState("jobs");
+function Main({ showJobs }) {
+	const [activeTab, setActiveTab] = useState(showJobs ? "jobs" : "market");
+
+	useEffect(() => {
+		if (!showJobs && activeTab === 'jobs') {
+			setActiveTab('market');
+		}
+	}, [showJobs, activeTab]);
 
 	return (
 		<div className="[grid-area:main] flex flex-col gap-5">
-			<LiquidGlassNav activeTab={activeTab} setActiveTab={setActiveTab} />
-			{activeTab === "jobs"    && <JobsFeed />}
+			<LiquidMinimalNav activeTab={activeTab} setActiveTab={setActiveTab} showJobs={showJobs} />
+			{activeTab === "jobs" && showJobs && <JobsFeed />}
 			{activeTab === "market" && <MarketplaceFeed />}
 			{activeTab === "network" && <NetworkingFeed />}
 		</div>

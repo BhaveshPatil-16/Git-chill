@@ -9,6 +9,8 @@ function SignIn(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(localStorage.getItem('hirex_remember_email') ? true : false);
 
   useEffect(() => {
     // If remember me saved credentials, autofill
@@ -26,21 +28,47 @@ function SignIn(props) {
     return <Navigate to="/profile" />;
   }
 
+  const validateForm = () => {
+    if (!email) return "Email is required";
+    if (!/\S+@\S+\.\S+/.test(email)) return "Please enter a valid email address";
+    if (!password) return "Password is required";
+    if (password.length < 6) return "Password must be at least 6 characters";
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setLoading(true);
     try {
       await props.signInWithEmail(email, password);
-      // Navigation happens via props.user effect or Redirect
+      
+      if (rememberMe) {
+        localStorage.setItem('hirex_remember_email', email);
+        localStorage.setItem('hirex_remember_password', password);
+      } else {
+        localStorage.removeItem('hirex_remember_email');
+        localStorage.removeItem('hirex_remember_password');
+      }
     } catch (err) {
+      setError(err.message || "Failed to sign in. Please check your credentials.");
       setLoading(false);
     }
   };
 
   const handleOAuth = async (provider) => {
+    setError('');
     try {
       await props.signInOAuth(provider);
     } catch (err) {
+      setError("OAuth authentication failed. Please try again.");
       console.error(err);
     }
   };
@@ -56,6 +84,12 @@ function SignIn(props) {
         </div>
 
         <div className="glass-panel p-6 sm:p-8">
+          {error && (
+            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm flex items-center gap-3 animate-shake">
+              <span className="text-lg">⚠️</span>
+              {error}
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1">
               <label className="text-sm text-gray-400 pl-1">Email Address</label>
@@ -91,16 +125,8 @@ function SignIn(props) {
               <input 
                 type="checkbox" 
                 id="rememberMe"
-                checked={localStorage.getItem('hirex_remember_email') ? true : false}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    localStorage.setItem('hirex_remember_email', email);
-                    localStorage.setItem('hirex_remember_password', password);
-                  } else {
-                    localStorage.removeItem('hirex_remember_email');
-                    localStorage.removeItem('hirex_remember_password');
-                  }
-                }}
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
                 className="w-4 h-4 rounded border-gray-500 bg-black/30 text-primary focus:ring-primary focus:ring-offset-background"
               />
               <label htmlFor="rememberMe" className="text-sm text-gray-400 cursor-pointer">
