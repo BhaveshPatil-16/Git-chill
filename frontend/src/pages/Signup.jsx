@@ -61,19 +61,22 @@ export default function Signup() {
           {step === 3 && <Step3RoleSelection formData={formData} onComplete={handleStepComplete} />}
           {step === 4 && (
             <div className="text-center py-8">
-              <div className="w-20 h-20 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-[#a855f7]/15 text-[#a855f7] rounded-full flex items-center justify-center mx-auto mb-6">
                 <ShieldCheck size={40} />
               </div>
-              <h2 className="text-2xl font-bold mb-2">Verification Complete</h2>
-              <p className="text-gray-400 mb-6">Your identity has been securely verified.</p>
-              <button 
+              <h2 className="text-2xl font-bold mb-2">Submitted for Review</h2>
+              <p className="text-gray-400 mb-6 leading-relaxed">
+                Your identity has been submitted. Our admin team will verify your credentials within 2–4 hours. You'll be redirected automatically once approved.
+              </p>
+              <button
                 className="btn-primary"
-                onClick={() => navigate('/profile')}
+                onClick={() => navigate('/pending')}
               >
-                Go to Profile
+                View Status
               </button>
             </div>
           )}
+
 
           {step === 1 && (
             <p className="mt-8 text-center text-sm text-gray-400">

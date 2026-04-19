@@ -19,13 +19,14 @@ function Login(props) {
 			<nav className="max-w-[1128px] mx-auto py-4 px-6 flex flex-nowrap items-center justify-between relative z-10">
 				<a href="/" className="flex items-center no-underline duration-[180ms]">
 					<span className="text-[30px] font-extrabold" style={{ background: "var(--gradient-accent)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>H</span>
-					<span className="text-[30px] font-bold text-white tracking-[-1px]">ire</span>
-					<span className="text-[36px] font-extrabold ml-[-2px]" style={{ background: "linear-gradient(135deg, #b47aef 0%, #5b9cf5 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>X</span>
+					<span className="text-[30px] font-bold tracking-[-1px]" style={{ color: "var(--nav-text-color)" }}>ire</span>
+					<span className="text-[36px] font-extrabold ml-[-2px]" style={{ background: "var(--gradient-accent)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>X</span>
 				</a>
 				<div className="flex items-center gap-2">
 					<button
 						onClick={() => navigate('/signup')}
-						className="text-[15px] px-[22px] py-[10px] rounded-lg text-white/70 font-medium transition-all duration-[180ms] cursor-pointer hover:bg-white/[0.08] hover:text-white tracking-[-0.01em]"
+						className="text-[15px] px-[22px] py-[10px] rounded-lg font-medium transition-all duration-[180ms] cursor-pointer hover:bg-black/5 dark:hover:bg-white/[0.08] tracking-[-0.01em]"
+						style={{ color: "var(--text-secondary)" }}
 					>
 						Join now
 					</button>
@@ -50,13 +51,13 @@ function Login(props) {
 
 					{/* Left: Text + CTA */}
 					<div className="w-full mb-10 md:w-1/2 md:mb-0 flex flex-col items-center md:items-start" style={{ animation: "slideUp 0.7s ease-out both" }}>
-						<h1 className="text-[36px] md:text-[64px] text-white font-black leading-[1.05] mb-6 tracking-[-0.05em]">
+						<h1 className="text-[36px] md:text-[64px] font-black leading-[1.05] mb-6 tracking-[-0.05em]" style={{ color: "var(--text-primary)" }}>
 							Connect with<br/>
 							<span style={{ background: "linear-gradient(135deg, #c084fc 0%, #6366f1 50%, #3b82f6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
 								Top Talent
 							</span>
 						</h1>
-						<p className="text-[18px] leading-[1.65] text-white/50 mb-9 max-w-[480px] font-medium tracking-tight">
+						<p className="text-[18px] leading-[1.65] mb-9 max-w-[480px] font-medium tracking-tight" style={{ color: "var(--text-secondary)" }}>
 							The exclusive ecosystem where the world's most innovative professionals and businesses discover, verify, and hire each other.
 						</p>
 
@@ -64,18 +65,18 @@ function Login(props) {
 						<div
 							className="mb-7 w-full max-w-[430px] p-[18px_20px] rounded-2xl border transition-all duration-[260ms]"
 							style={{
-								background: "rgba(255,255,255,0.04)",
+								background: "var(--bg-card)",
 								backdropFilter: "blur(12px)",
 								WebkitBackdropFilter: "blur(12px)",
-								border: "1px solid rgba(155,79,223,0.18)",
-								boxShadow: "0 4px 24px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.04)",
+								border: "1px solid var(--border-color)",
+								boxShadow: "var(--card-shadow)",
 							}}
 						>
-							<h4 className="text-[#ede9fe] text-[14px] mb-1.5 font-bold tracking-[-0.02em] flex items-center gap-1.5">
+							<h4 className="text-[14px] mb-1.5 font-bold tracking-[-0.02em] flex items-center gap-1.5" style={{ color: "var(--text-card-primary)" }}>
 								<span className="text-[16px]">⚠️</span>
 								Experienced Professionals Only
 							</h4>
-							<p className="text-[#d1d5db] text-[13px] leading-[1.6] font-normal tracking-[-0.01em]">
+							<p className="text-[13px] leading-[1.6] font-normal tracking-[-0.01em]" style={{ color: "var(--text-card-secondary)" }}>
 								Only verified businesses and working professionals (3+ Yrs) are allowed to sign up. Freshers are currently out of scope for this platform version.
 							</p>
 						</div>
@@ -100,18 +101,18 @@ function Login(props) {
 						<div className="flex flex-col gap-6 mt-12 w-full" style={{ animation: "slideUp 0.7s ease-out 0.4s both" }}>
 							<div className="flex items-center gap-8">
 								<div className="flex flex-col">
-									<span className="text-[24px] font-bold text-white tracking-tight">50k+</span>
-									<span className="text-[12px] text-white/30 uppercase tracking-widest font-bold">Professionals</span>
+									<span className="text-[24px] font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>50k+</span>
+									<span className="text-[12px] uppercase tracking-widest font-bold" style={{ color: "var(--text-card-muted)" }}>Professionals</span>
 								</div>
-								<div className="w-[1px] h-8 bg-white/10" />
+								<div className="w-[1px] h-8" style={{ background: "var(--border-color)" }} />
 								<div className="flex flex-col">
-									<span className="text-[24px] font-bold text-white tracking-tight">12k+</span>
-									<span className="text-[12px] text-white/30 uppercase tracking-widest font-bold">Verified Orgs</span>
+									<span className="text-[24px] font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>12k+</span>
+									<span className="text-[12px] uppercase tracking-widest font-bold" style={{ color: "var(--text-card-muted)" }}>Verified Orgs</span>
 								</div>
-								<div className="w-[1px] h-8 bg-white/10" />
+								<div className="w-[1px] h-8" style={{ background: "var(--border-color)" }} />
 								<div className="flex flex-col">
-									<span className="text-[24px] font-bold text-white tracking-tight">98%</span>
-									<span className="text-[12px] text-white/30 uppercase tracking-widest font-bold">Match Rate</span>
+									<span className="text-[24px] font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>98%</span>
+									<span className="text-[12px] uppercase tracking-widest font-bold" style={{ color: "var(--text-card-muted)" }}>Match Rate</span>
 								</div>
 							</div>
 						</div>
@@ -131,12 +132,12 @@ function Login(props) {
 									className="w-full h-auto drop-shadow-[0_32px_64px_rgba(0,0,0,0.4)]"
 								/>
 								{/* Floating badges */}
-								<div className="absolute -top-4 -right-4 bg-white/5 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl animate-bounce" style={{ animationDuration: '4s' }}>
+								<div className="absolute -top-4 -right-4 backdrop-blur-xl border p-4 rounded-2xl shadow-2xl animate-bounce" style={{ animationDuration: '4s', background: "var(--bg-nav)", borderColor: "var(--border-color)" }}>
 									<div className="flex items-center gap-3">
 										<div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center text-white text-[20px]">✓</div>
 										<div>
-											<div className="text-[12px] font-bold text-white">Identity Verified</div>
-											<div className="text-[10px] text-white/40">Secure Professional Network</div>
+											<div className="text-[12px] font-bold" style={{ color: "var(--text-primary)" }}>Identity Verified</div>
+											<div className="text-[10px]" style={{ color: "var(--text-card-muted)" }}>Secure Professional Network</div>
 										</div>
 									</div>
 								</div>
@@ -149,8 +150,8 @@ function Login(props) {
 			{/* Expansion: Features Section */}
 			<section className="relative z-10 w-full max-w-[1128px] mx-auto px-6 pb-[120px]">
 				<div className="text-center mb-16">
-					<h2 className="text-[32px] md:text-[42px] font-black text-white tracking-tight mb-4">Built for the Modern Professional</h2>
-					<p className="text-white/40 max-w-[600px] mx-auto">Experience a platform that prioritizes authenticity, security, and quality connections over noise.</p>
+					<h2 className="text-[32px] md:text-[42px] font-black tracking-tight mb-4" style={{ color: "var(--text-primary)" }}>Built for the Modern Professional</h2>
+					<p className="max-w-[600px] mx-auto" style={{ color: "var(--text-secondary)" }}>Experience a platform that prioritizes authenticity, security, and quality connections over noise.</p>
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -161,11 +162,12 @@ function Login(props) {
 					].map((feature, i) => (
 						<div 
 							key={i} 
-							className="bg-white/[0.03] border border-white/5 p-8 rounded-[32px] transition-all duration-300 hover:bg-white/[0.06] hover:border-white/10 group"
+							className="p-8 rounded-[32px] transition-all duration-300 group border"
+							style={{ background: "var(--bg-card)", borderColor: "var(--border-card)" }}
 						>
 							<div className="text-[40px] mb-6 inline-block">{feature.icon}</div>
-							<h3 className="text-[20px] font-bold text-white mb-3 tracking-tight">{feature.title}</h3>
-							<p className="text-white/40 leading-relaxed text-[14px]">{feature.desc}</p>
+							<h3 className="text-[20px] font-bold mb-3 tracking-tight" style={{ color: "var(--text-card-primary)" }}>{feature.title}</h3>
+							<p className="leading-relaxed text-[14px]" style={{ color: "var(--text-card-secondary)" }}>{feature.desc}</p>
 						</div>
 					))}
 				</div>
@@ -177,7 +179,7 @@ function Login(props) {
 					<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(155,79,223,0.1)_0%,transparent_70%)]" />
 					<div className="relative z-10">
 						<h2 className="text-[36px] md:text-[52px] font-black text-white tracking-tighter mb-6">Ready to elevate your career?</h2>
-						<p className="text-white/50 text-[18px] mb-10 max-w-[500px] mx-auto">Join thousands of verified professionals already on the platform.</p>
+						<p className="text-white/70 text-[18px] mb-10 max-w-[500px] mx-auto">Join thousands of verified professionals already on the platform.</p>
 						<button 
 							onClick={() => navigate('/signup')}
 							className="h-16 px-12 rounded-full bg-white text-black font-black text-[18px] transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]"

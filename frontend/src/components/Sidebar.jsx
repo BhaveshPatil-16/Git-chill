@@ -62,21 +62,28 @@ function Sidebar({ user, showJobs }) {
 					<svg className={`shrink-0 w-5 h-5 mr-[14px] transition-transform duration-200 group-[.sidebar-closed]:mr-0 group-[.sidebar-closed]:w-6 group-[.sidebar-closed]:h-6 text-current ${location.pathname === '/promotions' ? 'scale-110' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
 					<span className="whitespace-nowrap transition-opacity duration-200 group-[.sidebar-closed]:opacity-0 group-[.sidebar-closed]:invisible group-[.sidebar-closed]:hidden">Promoted Reach</span>
 				</Link>
-				<Link to="/profile" className={`flex items-center px-4 py-3 rounded-xl text-[var(--text-card-secondary)] text-[14px] font-semibold transition-all duration-200 no-underline group-[.sidebar-closed]:justify-center group-[.sidebar-closed]:px-0 hover:bg-[#a855f7]/15 hover:text-[#a855f7] ${location.pathname === '/profile' ? 'bg-[#a855f7]/15 text-[#a855f7]' : ''}`}>
-					<svg className={`shrink-0 w-5 h-5 mr-[14px] transition-transform duration-200 group-[.sidebar-closed]:mr-0 group-[.sidebar-closed]:w-6 group-[.sidebar-closed]:h-6 text-current ${location.pathname === '/profile' ? 'scale-110' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-					<span className="whitespace-nowrap transition-opacity duration-200 group-[.sidebar-closed]:opacity-0 group-[.sidebar-closed]:invisible group-[.sidebar-closed]:hidden">My Profile</span>
-				</Link>
+				{user?.role === 'individual' && (
+					<Link to="/profile" className={`flex items-center px-4 py-3 rounded-xl text-[var(--text-card-secondary)] text-[14px] font-semibold transition-all duration-200 no-underline group-[.sidebar-closed]:justify-center group-[.sidebar-closed]:px-0 hover:bg-[#a855f7]/15 hover:text-[#a855f7] ${location.pathname === '/profile' ? 'bg-[#a855f7]/15 text-[#a855f7]' : ''}`}>
+						<svg className={`shrink-0 w-5 h-5 mr-[14px] transition-transform duration-200 group-[.sidebar-closed]:mr-0 group-[.sidebar-closed]:w-6 group-[.sidebar-closed]:h-6 text-current ${location.pathname === '/profile' ? 'scale-110' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+						<span className="whitespace-nowrap transition-opacity duration-200 group-[.sidebar-closed]:opacity-0 group-[.sidebar-closed]:invisible group-[.sidebar-closed]:hidden">My Profile</span>
+					</Link>
+				)}
+				{user?.role === 'business_owner' && (
+					<Link to="/organizer" className={`flex items-center px-4 py-3 rounded-xl text-[var(--text-card-secondary)] text-[14px] font-semibold transition-all duration-200 no-underline group-[.sidebar-closed]:justify-center group-[.sidebar-closed]:px-0 hover:bg-[#3b82f6]/15 hover:text-[#3b82f6] ${location.pathname === '/organizer' ? 'bg-[#3b82f6]/15 text-[#3b82f6]' : ''}`}>
+						<svg className={`shrink-0 w-5 h-5 mr-[14px] transition-transform duration-200 group-[.sidebar-closed]:mr-0 group-[.sidebar-closed]:w-6 group-[.sidebar-closed]:h-6 text-current ${location.pathname === '/organizer' ? 'scale-110' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+						<span className="whitespace-nowrap transition-opacity duration-200 group-[.sidebar-closed]:opacity-0 group-[.sidebar-closed]:invisible group-[.sidebar-closed]:hidden">Organizer Portal</span>
+					</Link>
+				)}
+
 			</nav>
 			
-			{showJobs && (
-				<div className="bg-gradient-to-br from-[#3b82f6]/10 to-[#a855f7]/10 border-l-4 border-[#3b82f6] rounded-xl p-4 mt-auto duration-200 hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] group-[.sidebar-closed]:opacity-0 group-[.sidebar-closed]:invisible group-[.sidebar-closed]:hidden">
-					<div className="flex items-center gap-2 text-[12px] font-bold text-[#3b82f6] mb-2 uppercase">✨ DESIGNER X TIP</div>
-					<p className="text-[13px] text-[var(--text-primary)] leading-[1.5] font-medium">Adding "Node.js" and "SQL" will increase your match rate with top startups by 42%.</p>
-					<Link to="/profile" className="block text-center bg-[#3b82f6] text-white no-underline px-3 py-2 rounded-lg text-[12px] font-semibold mt-3 cursor-pointer shadow-[0_2px_8px_rgba(59,130,246,0.3)] transition-all duration-200 w-full hover:bg-[#2563eb]">Update Profile</Link>
-				</div>
-			)}
+			<div className="bg-gradient-to-br from-[#3b82f6]/10 to-[#a855f7]/10 border-l-4 border-[#3b82f6] rounded-xl p-4 mt-auto transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] group-[.sidebar-closed]:opacity-0 group-[.sidebar-closed]:invisible group-[.sidebar-closed]:hidden">
+				<div className="flex items-center gap-2 text-[12px] font-bold text-[#3b82f6] mb-2 uppercase">✨ AI SMART TIP</div>
+				<p className="text-[13px] text-white leading-[1.5] font-medium">Adding "Node.js" and "SQL" will increase your match rate with top startups by 42%.</p>
+				<button className="bg-[#3b82f6] text-white border-none px-3 py-2 rounded-lg text-[12px] font-semibold mt-3 cursor-pointer shadow-[0_2px_8px_rgba(59,130,246,0.3)] transition-all duration-200 w-full hover:bg-[#2563eb] hover:scale-[1.02]">Update Profile</button>
+			</div>
 			
-			<div className="bg-gradient-to-br from-[#0f172a] to-[#1e1b4b] rounded-xl p-4 text-white duration-200 hover:shadow-[0_8px_16px_rgba(0,0,0,0.2)] group-[.sidebar-closed]:opacity-0 group-[.sidebar-closed]:invisible group-[.sidebar-closed]:hidden">
+			<div className="bg-gradient-to-br from-[#0f172a] to-[#1e1b4b] rounded-xl p-4 text-white transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(0,0,0,0.2)] group-[.sidebar-closed]:opacity-0 group-[.sidebar-closed]:invisible group-[.sidebar-closed]:hidden">
 				<h3 className="text-[14px] font-bold mb-2 flex items-center gap-2">🎁 Invite & Earn</h3>
 				<p className="text-[12px] text-white/70 leading-[1.5] mb-3">Earn $50 platform credit when a referred professional gets verified.</p>
 				<div className="flex items-center justify-between bg-white/10 border border-dashed border-white/30 px-3 py-2 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-white/20">
@@ -87,6 +94,8 @@ function Sidebar({ user, showJobs }) {
 		</div>
 	);
 }
+
+
 
 const mapStateToProps = (state) => {
 	return {

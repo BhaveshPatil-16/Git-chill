@@ -25,8 +25,16 @@ function SignIn(props) {
   }, []);
 
   if (props.user) {
+    // If not yet verified, hold at pending page
+    if (props.user.verificationStatus && props.user.verificationStatus !== 'verified') {
+      return <Navigate to="/pending" />;
+    }
+    // Role-based destination after login
+    if (props.user.role === 'business_owner') return <Navigate to="/organizer" />;
     return <Navigate to="/profile" />;
+
   }
+
 
   const validateForm = () => {
     if (!email) return "Email is required";

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Plus, X, Calendar, MapPin, Tag, Image as ImageIcon, ArrowUpRight, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Plus, X, Calendar, MapPin, Tag, Image as ImageIcon, ArrowUpRight, Sparkles, DollarSign } from 'lucide-react';
+
 
 const INITIAL_EVENTS = [
   {
@@ -19,32 +20,63 @@ const INITIAL_EVENTS = [
 ];
 
 const Events = () => {
-  const [events, setEvents] = useState(INITIAL_EVENTS);
+  const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   const [formData, setFormData] = useState({
     title: '',
-    desc: '',
+    description: '',
+    date: '',
+    price: '0',
     img: '',
     tags: ''
   });
+
+  const fetchEvents = async () => {
+    setIsFetching(true);
+    try {
+      const res = await fetch('http://localhost:3001/api/v2/events/approved');
+      const data = await res.json();
+      if (data.success) {
+        setEvents(data.events);
+      }
+    } catch (err) {
+      console.error("Failed to fetch events:", err);
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   const handleCreateEvent = async (e) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate backend call
-    setTimeout(() => {
-      const newEvent = {
-        id: Date.now(),
-        ...formData,
-        tags: formData.tags.split(',').map(t => t.trim())
-      };
-      setEvents([newEvent, ...events]);
+    try {
+      const res = await fetch('http://localhost:3001/api/v2/events/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          price: Number(formData.price),
+          tags: formData.tags.split(',').map(t => t.trim())
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsModalOpen(false);
+        setFormData({ title: '', description: '', date: '', price: '0', img: '', tags: '' });
+        alert('Event submitted! It will appear after admin approval.');
+      }
+    } catch (err) {
+      alert('Failed to submit event.');
+    } finally {
       setLoading(false);
-      setIsModalOpen(false);
-      setFormData({ title: '', desc: '', img: '', tags: '' });
-    }, 1500);
+    }
   };
 
   return (
@@ -72,50 +104,71 @@ const Events = () => {
       </div>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-        {events.map((event) => (
-          <div key={event.id} className="flex flex-col group hover:-translate-y-1 transition-all duration-300">
-            <div className="relative w-full h-[220px] rounded-t-3xl rounded-bl-3xl overflow-hidden shadow-[var(--card-shadow)] border border-[var(--border-card)]">
-              <img
-                src={event.img || "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2012&auto=format&fit=crop"}
-                alt={event.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-black/40" />
-              
-              <div className="absolute -bottom-1.5 -right-1.5 w-20 h-20 rounded-tl-full"
-                   style={{ background: "var(--bg-primary)" }}>
-                  <button className="absolute inset-2.5 rounded-full flex justify-center items-center transition-all duration-300 hover:scale-110 cursor-pointer border-none" style={{ background: "var(--gradient-accent)", boxShadow: "0 4px 15px rgba(155, 79, 223, 0.4)" }}>
-                     <ArrowUpRight size={24} className="text-white" />
-                  </button>
+      {isFetching ? (
+        <div className="flex justify-center py-20">
+          <div className="w-8 h-8 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin" />
+        </div>
+      ) : events.length === 0 ? (
+        <div className="bg-[var(--bg-card)] border border-dashed border-[var(--border-card)] rounded-[32px] p-20 text-center">
+           <Calendar size={48} className="text-[var(--text-card-muted)] mx-auto mb-4" />
+           <p className="text-[var(--text-card-muted)] font-bold">No approved events available yet.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+          {events.map((event) => (
+            <div key={event.id} className="flex flex-col group hover:-translate-y-1 transition-all duration-300">
+              <div className="relative w-full h-[220px] rounded-t-3xl rounded-bl-3xl overflow-hidden shadow-[var(--card-shadow)] border border-[var(--border-card)]">
+                <img
+                  src={event.img || "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2012&auto=format&fit=crop"}
+                  alt={event.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/40" />
+                
+                <div className="absolute -bottom-1.5 -right-1.5 w-20 h-20 rounded-tl-full"
+                     style={{ background: "var(--bg-primary)" }}>
+                    <button className="absolute inset-2.5 rounded-full flex justify-center items-center transition-all duration-300 hover:scale-110 cursor-pointer border-none" style={{ background: "var(--gradient-accent)", boxShadow: "0 4px 15px rgba(155, 79, 223, 0.4)" }}>
+                       <ArrowUpRight size={24} className="text-white" />
+                    </button>
+                </div>
+
+                <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                  {event.tags && event.tags.map((tag, i) => (
+                    <span key={i} className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest">
+                      {tag}
+                    </span>
+                  ))}
+                  {event.price > 0 ? (
+                    <span className="px-3 py-1 rounded-full bg-green-500 text-white text-[10px] font-black uppercase tracking-widest">
+                      ${event.price}
+                    </span>
+                  ) : (
+                    <span className="px-3 py-1 rounded-full bg-blue-500 text-white text-[10px] font-black uppercase tracking-widest">
+                      Free
+                    </span>
+                  )}
+                </div>
               </div>
 
-              <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                {event.tags.map((tag, i) => (
-                  <span key={i} className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest">
-                    {tag}
-                  </span>
-                ))}
+              <div className="pt-6 pb-2 space-y-3 px-2">
+                <div className="flex items-center gap-2 text-[12px] font-bold text-[var(--text-secondary)]">
+                   <Calendar size={14} />
+                   <span>{event.date}</span>
+                   <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)] mx-1"></span>
+                   <span className="text-purple-500">by {event.organizerName || 'Partner'}</span>
+                </div>
+                <h3 className="text-[22px] font-black text-[var(--text-primary)] tracking-tight leading-tight group-hover:text-purple-500 transition-colors">
+                  {event.title}
+                </h3>
+                <p className="text-[var(--text-secondary)] leading-relaxed text-[14px] font-medium line-clamp-3">
+                  {event.description}
+                </p>
               </div>
             </div>
+          ))}
+        </div>
+      )}
 
-            <div className="pt-6 pb-2 space-y-3 px-2">
-              <div className="flex items-center gap-2 text-[12px] font-bold text-[var(--text-secondary)]">
-                 <Calendar size={14} />
-                 <span>Oct 15, 2026</span>
-                 <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)] mx-1"></span>
-                 <span>Virtual Event</span>
-              </div>
-              <h3 className="text-[22px] font-black text-[var(--text-primary)] tracking-tight leading-tight group-hover:text-purple-500 transition-colors">
-                {event.title}
-              </h3>
-              <p className="text-[var(--text-secondary)] leading-relaxed text-[14px] font-medium line-clamp-3">
-                {event.desc}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
 
       {/* Creation Modal */}
       {isModalOpen && (
@@ -156,13 +209,43 @@ const Events = () => {
               <div className="space-y-1.5">
                 <label className="text-[12px] font-black text-[var(--text-card-muted)] uppercase tracking-widest pl-1">Description</label>
                 <textarea 
-                  required 
-                  rows="3"
-                  value={formData.desc}
-                  onChange={(e) => setFormData({...formData, desc: e.target.value})}
-                  className="w-full bg-[var(--input-bg)] border border-[var(--border-color)] rounded-2xl p-4 focus:border-purple-500/50 outline-none transition-all font-medium text-[14px] text-[var(--input-text)]"
-                  placeholder="What is this event about?"
-                />
+                   required 
+                   rows="3"
+                   value={formData.description}
+                   onChange={(e) => setFormData({...formData, description: e.target.value})}
+                   className="w-full bg-[var(--input-bg)] border border-[var(--border-color)] rounded-2xl p-4 focus:border-purple-500/50 outline-none transition-all font-medium text-[14px] text-[var(--input-text)]"
+                   placeholder="What is this event about?"
+                 />
+               </div>
+
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[12px] font-black text-[var(--text-card-muted)] uppercase tracking-widest pl-1">Event Date</label>
+                  <div className="relative">
+                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-card-muted)]" size={18} />
+                    <input 
+                      type="date" 
+                      required
+                      value={formData.date}
+                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      className="w-full h-14 bg-[var(--input-bg)] border border-[var(--border-color)] rounded-2xl pl-12 pr-4 focus:border-purple-500/50 outline-none transition-all font-bold text-[14px] text-[var(--input-text)]"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[12px] font-black text-[var(--text-card-muted)] uppercase tracking-widest pl-1">Price (USD)</label>
+                  <div className="relative">
+                    <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-card-muted)]" size={18} />
+                    <input 
+                      type="number" 
+                      min="0"
+                      step="0.01"
+                      value={formData.price}
+                      onChange={(e) => setFormData({...formData, price: e.target.value})}
+                      className="w-full h-14 bg-[var(--input-bg)] border border-[var(--border-color)] rounded-2xl pl-12 pr-4 focus:border-purple-500/50 outline-none transition-all font-bold text-[14px] text-[var(--input-text)]"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -193,6 +276,7 @@ const Events = () => {
                   </div>
                 </div>
               </div>
+
 
               <button 
                 type="submit" 

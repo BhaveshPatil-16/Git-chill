@@ -5,7 +5,7 @@ module.exports = async function (fastify, opts) {
   // POST /register
   // Save basic user data
   fastify.post('/register', async (request, reply) => {
-    const { name, email, role, company } = request.body;
+    const { name, email, role, company, firebaseUid } = request.body;
 
     if (!name || !email || !role) {
       return reply.code(400).send({
@@ -19,10 +19,12 @@ module.exports = async function (fastify, opts) {
         name,
         email,
         role,
+        firebaseUid: firebaseUid || null,
         company: company || null,
         verificationStatus: 'pending',
         createdAt: new Date().toISOString()
       };
+
 
       const userRef = await db.collection('users').add(userData);
 
@@ -55,7 +57,7 @@ module.exports = async function (fastify, opts) {
         return reply.code(404).send({ success: false, message: 'User not found' });
       }
 
-      const updates = { verificationStatus: 'verified' };
+      const updates = { verificationStatus: 'pending' };
 
       try {
         // Upload Face Image

@@ -10,11 +10,15 @@ try {
     ? process.env.FIREBASE_SA_PRIVATE_KEY.replace(/\\n/g, '\n')
     : undefined;
 
-  if (
-    process.env.FIREBASE_SA_PROJECT_ID &&
-    process.env.FIREBASE_SA_CLIENT_EMAIL &&
-    privateKey
-  ) {
+  const config = {
+    projectId: process.env.FIREBASE_SA_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_SA_CLIENT_EMAIL,
+    hasKey: !!privateKey
+  };
+  
+  console.log('[Firebase Init] Checking credentials:', config);
+
+  if (config.projectId && config.clientEmail && config.hasKey) {
     const serviceAccount = {
       type:                        process.env.FIREBASE_SA_TYPE || 'service_account',
       project_id:                  process.env.FIREBASE_SA_PROJECT_ID,
@@ -39,8 +43,13 @@ try {
     firebaseReady = true;
     console.log('✅ Firebase Admin SDK initialized successfully with Storage support.');
   } else {
-    console.warn('⚠️ Firebase service account env vars missing. Admin SDK not initialized.');
+
+    console.warn('⚠️ Firebase service account env vars missing. Required: PROJECT_ID, CLIENT_EMAIL, PRIVATE_KEY.');
+    if (!config.projectId) console.warn('Missing: FIREBASE_SA_PROJECT_ID');
+    if (!config.clientEmail) console.warn('Missing: FIREBASE_SA_CLIENT_EMAIL');
+    if (!config.hasKey) console.warn('Missing: FIREBASE_SA_PRIVATE_KEY');
   }
+
 } catch (error) {
   console.error('Firebase Admin init error:', error);
 }

@@ -1,4 +1,4 @@
-import db, { auth, provider as googleProvider, githubProvider, storage } from "../firebase";
+import db, { auth, provider as googleProvider, githubProvider, linkedinProvider, storage } from "../firebase";
 import { SET_LOADING_STATUS, SET_USER, GET_ARTICLES } from "./actionType";
 
 export function setUser(payload) {
@@ -23,22 +23,65 @@ export function getArticles(payload, id) {
 	};
 }
 
+// Helper to fetch Firestore data and merge with Auth user
+async function hydrateUser(user) {
+	try {
+		const snapshot = await db.collection('users')
+			.where('firebaseUid', '==', user.uid)
+			.limit(1)
+			.get();
+
+		if (!snapshot.empty) {
+			const userData = snapshot.docs[0].data();
+			// Create a clone to ensure Redux detects changes
+			const mergedUser = { 
+				...user, 
+				role: userData.role || null,
+				verificationStatus: userData.verificationStatus || 'pending',
+				firestoreId: snapshot.docs[0].id,
+				displayName: userData.name || user.displayName
+			};
+			return mergedUser;
+		}
+		return { ...user, role: null, verificationStatus: 'pending' };
+	} catch (err) {
+		console.warn('Firestore fetch failed:', err.message);
+		return user;
+	}
+}
+
 export function getUserAuth() {
 	return (dispatch) => {
 		auth.onAuthStateChanged(async (user) => {
 			if (user) {
-				dispatch(setUser(user));
+				const mergedUser = await hydrateUser(user);
+				dispatch(setUser(mergedUser));
+			} else {
+				dispatch(setUser(null));
 			}
 		});
 	};
 }
 
+export function refreshUserAPI() {
+	return async (dispatch) => {
+		const user = auth.currentUser;
+		if (user) {
+			const mergedUser = await hydrateUser(user);
+			dispatch(setUser(mergedUser));
+		}
+	};
+}
+
+
 export function signInAPI(providerName = 'google') {
 	return (dispatch) => {
 		let selectedProvider = googleProvider;
 		if (providerName === 'github') selectedProvider = githubProvider;
+		if (providerName === 'linkedin') selectedProvider = linkedinProvider;
 
 		return auth.signInWithPopup(selectedProvider)
+
 			.then((payload) => {
 				dispatch(setUser(payload.user));
 				return payload.user;

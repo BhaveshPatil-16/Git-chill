@@ -84,24 +84,24 @@ function Header(props) {
 
 
 
-						{/* Sign Out Button */}
+
+						{/* Sign Out */}
 						<li className="flex items-center h-full">
 							<button
 								onClick={() => {
 									props.signOut();
 									navigate("/");
 								}}
-								className="flex flex-col items-center justify-center min-w-[80px] h-full text-[12px] font-medium transition-all duration-200 cursor-pointer bg-transparent border-none px-2 group"
+								className="flex flex-col items-center justify-center min-w-[80px] h-full text-[12px] font-medium transition-all duration-200 cursor-pointer bg-transparent border-none px-2"
 								style={{ color: "var(--text-secondary)" }}
-								onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent-purple)"; }}
+								onMouseEnter={(e) => { e.currentTarget.style.color = "#ff4d4d"; }}
 								onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; }}
 							>
-								<span className="flex flex-col items-center">
-									<LogOut size={20} className="mb-1 transition-transform group-hover:-translate-x-0.5" />
-									<span>Sign Out</span>
-								</span>
+								<LogOut className="w-5 h-5 mb-1" />
+								<span>Sign Out</span>
 							</button>
 						</li>
+
 					</ul>
 				</nav>
 			</div>
