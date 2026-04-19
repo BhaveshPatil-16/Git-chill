@@ -1,4 +1,4 @@
-import db, { auth, provider as googleProvider, githubProvider, linkedinProvider, storage } from "../firebase";
+import db, { auth, provider as googleProvider, githubProvider, storage } from "../firebase";
 import { SET_LOADING_STATUS, SET_USER, GET_ARTICLES } from "./actionType";
 
 export function setUser(payload) {
@@ -37,7 +37,6 @@ export function signInAPI(providerName = 'google') {
 	return (dispatch) => {
 		let selectedProvider = googleProvider;
 		if (providerName === 'github') selectedProvider = githubProvider;
-		if (providerName === 'linkedin') selectedProvider = linkedinProvider;
 
 		return auth.signInWithPopup(selectedProvider)
 			.then((payload) => {

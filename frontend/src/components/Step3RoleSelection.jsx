@@ -94,7 +94,7 @@ export default function Step3RoleSelection({ formData: globalFormData, onComplet
           {role === 'individual' && (
             <div className="space-y-4">
               <div className="space-y-1">
-                <label className="text-sm text-gray-400 pl-1">Professional Proof Link (e.g., LinkedIn, Portfolio)</label>
+                <label className="text-sm text-gray-400 pl-1">Professional Proof Link (e.g., Portfolio, GitHub, Company Website)</label>
                 <input 
                   type="url" 
                   name="identity_proof_link"
@@ -102,7 +102,7 @@ export default function Step3RoleSelection({ formData: globalFormData, onComplet
                   value={formData.identity_proof_link}
                   onChange={handleInputChange}
                   className="input-field" 
-                  placeholder="https://linkedin.com/in/yourprofile" 
+                  placeholder="https://github.com/username or https://yourportfolio.com" 
                 />
               </div>
               
