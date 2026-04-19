@@ -1,0 +1,328 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Russo+One&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	/* Dark Theme Variables — Muted & Professional */
+	--bg-primary: linear-gradient(145deg, #0f051a 0%, #0a0418 40%, #05030c 100%);
+	--bg-hero: radial-gradient(circle, rgba(155,79,223,0.12) 0%, transparent 70%);
+	--bg-nav: rgba(5, 3, 12, 0.95);
+	--bg-card: rgba(255, 255, 255, 0.03);
+	--bg-card-hover: rgba(255, 255, 255, 0.05);
+	--text-primary: #ffffff;
+	--text-secondary: rgba(255, 255, 255, 0.55);
+	--text-card-primary: #ffffff;
+	--text-card-secondary: rgba(255, 255, 255, 0.6);
+	--text-card-muted: rgba(255, 255, 255, 0.4);
+	--border-color: rgba(255, 255, 255, 0.08);
+	--border-card: rgba(255, 255, 255, 0.06);
+	--bg-subtle: rgba(255, 255, 255, 0.03);
+	--bg-subtle-hover: rgba(255, 255, 255, 0.06);
+	--border-subtle: rgba(255, 255, 255, 0.05);
+	--accent-blue: #3b82f6;
+	--accent-purple: #a855f7;
+	--accent-green: #10b981;
+	--gradient-accent: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+	--card-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+	--card-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.4);
+	--input-bg: rgba(255, 255, 255, 0.05);
+	--input-focus: rgba(255, 255, 255, 0.08);
+	--input-text: #ffffff;
+	--icon-filter: brightness(0) invert(1) opacity(0.5);
+	--icon-hover: brightness(0) invert(1);
+	--nav-text-color: #ffffff;
+	--radius-sm: 8px;
+	--radius-md: 14px;
+	--radius-lg: 20px;
+	--radius-xl: 32px;
+	--nav-glass-bg: rgba(5, 5, 10, 0.8);
+	--nav-pill-bg: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='light'] {
+	/* Light Theme Variables — Clean & Professional */
+	--bg-primary: #ffffff;
+	--bg-hero: radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 70%);
+	--bg-nav: rgba(255, 255, 255, 0.9);
+	--bg-card: #f8fafc;
+	--bg-card-hover: #f1f5f9;
+	--text-primary: #1e293b;
+	--text-secondary: #64748b;
+	--text-card-primary: #0f172a;
+	--text-card-secondary: #475569;
+	--text-card-muted: #94a3b8;
+	--border-color: #e2e8f0;
+	--border-card: #e2e8f0;
+	--bg-subtle: #f1f5f9;
+	--bg-subtle-hover: #e2e8f0;
+	--border-subtle: #cbd5e1;
+	--accent-blue: #2563eb;
+	--accent-purple: #9333ea;
+	--accent-green: #059669;
+	--gradient-accent: linear-gradient(135deg, #9333ea 0%, #2563eb 100%);
+	--card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+	--card-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.08);
+	--input-bg: #f1f5f9;
+	--input-focus: #ffffff;
+	--input-text: #0f172a;
+	--icon-filter: brightness(0.4);
+	--icon-hover: brightness(0.2);
+	--nav-text-color: #1e293b;
+	--nav-glass-bg: rgba(255, 255, 255, 0.8);
+	--nav-pill-bg: #f1f5f9;
+}
+
+body.sidebar-closed {
+	--sidebar-width: 80px;
+}
+
+body {
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+:root,
+html,
+body {
+	background: var(--bg-primary);
+	background-attachment: fixed;
+	min-height: 100vh;
+	transition: background var(--transition-normal);
+	cursor: none;
+}
+
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+html,
+body,
+i,
+img,
+small,
+label,
+li,
+ul,
+p,
+nav,
+span {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: none;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+
+body {
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	color: var(--text-primary);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	letter-spacing: -0.01em;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(155, 79, 223, 0.2); 
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(155, 79, 223, 0.45); 
+}
+
+/* Utility Animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes subtlePulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.85; }
+}
+
+@keyframes shimmer {
+	0% { background-position: -200% 0; }
+	100% { background-position: 200% 0; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.2s ease-in-out 0s 2;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+	outline: 2px solid var(--accent-purple);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+/* Selection color */
+::selection {
+	background-color: rgba(155, 79, 223, 0.25);
+	color: inherit;
+}
+
+@layer components {
+  .input-field {
+    @apply w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6366f1] focus:border-transparent transition-all;
+  }
+
+  .btn-primary {
+    @apply w-full bg-gradient-to-r from-[#9b4fdf] to-[#3674e0] hover:from-[#9b4fdf]/90 hover:to-[#3674e0]/90 text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-[#9b4fdf]/20 hover:shadow-[#9b4fdf]/40 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .glass-panel {
+    @apply bg-[#1c1c24]/50 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl;
+  }
+}
+
+/* Custom animations */
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom Cursor Styles */
+.cursor {
+  pointer-events: none;
+  position: fixed;
+  padding: 0.3rem;
+  background-color: #fff;
+  border-radius: 50%;
+  mix-blend-mode: difference;
+  transition: transform 0.3s ease;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
+.hover-this {
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+/* Apply specific font only to hover-this spans if requested, 
+   but keep it optional to maintain project aesthetics */
+.hover-this.custom-font span {
+  font-family: 'Russo One', sans-serif;
+  text-transform: uppercase;
+}
+
+/* Strict content freeze to prevent ANY movement on hover */
+button *, a *, [role="button"] *, .hover-this * {
+  transform: none !important;
+  transition: transform 0s !important;
+}
+
+/* ─── Shared Utility Classes (used by Admin/Organizer/Pending pages) ─── */
+
+/* Dark glass panel card */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Form input shared style */
+.input-field {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.input-field::placeholder { color: rgba(255,255,255,0.2); }
+.input-field:focus {
+  border-color: rgba(168, 85, 247, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Primary action button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #a855f7, #3b82f6);
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.3);
+  transition: opacity 0.2s;
+}
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary:hover:not(:disabled) { opacity: 0.9; }
+
+/* Dark page background (for admin/pending standalone pages) */
+.bg-background { background-color: #050510; }
+.bg-surface { background-color: rgba(255,255,255,0.05); }
+.text-primary { color: #a855f7; }
+.text-secondary { color: #3b82f6; }
+.bg-primary { background: #a855f7; }
+.bg-secondary { background: #3b82f6; }
+
+/* Fade-in animation for standalone pages */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+.animate-fade-in-up { animation: fadeIn 0.5s ease forwards; }
+
