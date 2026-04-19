@@ -37,7 +37,33 @@ module.exports = async function (fastify, opts) {
       console.error('[Admin] Error fetching pending users:', error);
       return reply.code(500).send({ success: false, message: 'Failed to fetch pending users', error: error.message });
     }
+  });
 
+  // GET /pending-founders — fetch founders awaiting entity verification
+  fastify.get('/pending-founders', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+    try {
+      const snapshot = await db.collection('users')
+        .where('founderStatus', '==', 'pending')
+        .get();
+      const pendingFounders = [];
+      snapshot.forEach(doc => {
+        pendingFounders.push({ id: doc.id, ...doc.data() });
+      });
+      return { success: true, pendingFounders };
+    } catch (error) {
+      return reply.code(500).send({ success: false, message: 'Failed to fetch pending founders' });
+    }
+  });
+
+  // POST /approve-founder — approve a founder
+  fastify.post('/approve-founder', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+    const { userId } = request.body;
+    try {
+      await db.collection('users').doc(userId).update({ founderStatus: 'verified' });
+      return { success: true, message: 'Founder verified' };
+    } catch (error) {
+      return reply.code(500).send({ success: false, message: 'Approval failed' });
+    }
   });
 
   // DEBUG: GET /debug-users — fetch all users regardless of status

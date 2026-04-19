@@ -32,6 +32,8 @@ import BusinessExchange from "./BusinessExchange";
 import Promotions from "./Promotions";
 import Marketplace from "./Marketplace";
 import OrganizerPortal from "./OrganizerPortal";
+import InvestmentHub from "./InvestmentHub";
+import FounderVerification from "./FounderVerification";
 
 // ─── Shared layout for verified users ───────────────────────────────────────
 function AuthLayout({ children, showJobs, setShowJobs }) {
@@ -179,6 +181,10 @@ function App({ getUserAuth, user }) {
 
 					{/* ── Business Owner only ───────────────── */}
 					<Route path="/organizer" element={<OrganizerRoute {...routeProps}><OrganizerPortal /></OrganizerRoute>} />
+					<Route path="/verify-founder" element={<OrganizerRoute {...routeProps}><FounderVerification /></OrganizerRoute>} />
+
+					{/* ── Investment ─────────────────────────── */}
+					<Route path="/investment-hub" element={<VerifiedRoute {...routeProps}><InvestmentHub /></VerifiedRoute>} />
 
 
 					{/* ── Catch-all ─────────────────────────── */}

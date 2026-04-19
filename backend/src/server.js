@@ -16,7 +16,9 @@ fastify.register(require('./plugins/rbac'));
 fastify.register(require('./routes/verification'), { prefix: '/api/verification' });
 fastify.register(require('./routes/new_auth'), { prefix: '/api/v2/auth' });
 fastify.register(require('./routes/admin'), { prefix: '/api/v2/admin' });
+fastify.register(require('./routes/investment'), { prefix: '/api/v2/investment' });
 fastify.register(require('./routes/events'), { prefix: '/api/v2/events' });
+
 
 
 // Health check route
